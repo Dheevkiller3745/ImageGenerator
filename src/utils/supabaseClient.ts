@@ -10,14 +10,11 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 // 2. Admin Client (Server-only, uses service role key)
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
 
-export const supabaseAdmin = (() => {
-  if (typeof window !== 'undefined') {
-    throw new Error('supabaseAdmin cannot be used in browser');
-  }
-  return createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
-})();
+export const supabaseAdmin = typeof window !== 'undefined'
+  ? (null as any)
+  : createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    });
