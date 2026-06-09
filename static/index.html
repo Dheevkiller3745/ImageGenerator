@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherImage - Unlimited AI Image Generator & Workspace</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Vanilla CSS Custom Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Puter.js SDK -->
+    <script src="https://js.puter.com/v2/"></script>
+</head>
+<body class="theme-dark">
+    <!-- Main App Layout Grid -->
+    <div class="app-container">
+        
+        <!-- Left Sidebar: Session History & Generation Settings -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="spark-icon-container">
+                        <i data-lucide="sparkles" class="logo-spark"></i>
+                    </div>
+                    <h2>Aether<span>Image</span></h2>
+                </div>
+                <button class="icon-btn close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+
+            <!-- New Session Button -->
+            <button class="new-session-btn" id="newSessionBtn">
+                <i data-lucide="plus"></i> New Workspace
+            </button>
+
+            <!-- Sidebar Scrollable Sections -->
+            <div class="sidebar-scroll-content">
+                
+                <!-- History / Sessions Section -->
+                <div class="sidebar-section">
+                    <h3 class="section-title"><i data-lucide="folder-heart"></i> Recent Workspaces</h3>
+                    <ul class="session-list" id="sessionList">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+
+                <!-- AI Engine Configuration -->
+                <div class="sidebar-section">
+                    <h3 class="section-title"><i data-lucide="cpu"></i> AI Generation Engine</h3>
+                    <div class="input-group">
+                        <select id="engineSelect">
+                            <option value="puter" selected>Puter AI (Fast, Free & Stable)</option>
+                            <option value="pollinations">Pollinations AI (No-key & Rapid)</option>
+                            <option value="perchance">Perchance API (Local Server Proxy)</option>
+                        </select>
+                    </div>
+                    <div class="warning-box hidden" id="perchanceWarning">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Requires local python server. Might challenge Turnstile verification.</span>
+                    </div>
+                </div>
+
+                <!-- Aspect Ratio & Dimensions Selection -->
+                <div class="sidebar-section">
+                    <h3 class="section-title"><i data-lucide="aspect-ratio"></i> Aspect Ratio</h3>
+                    <div class="ratio-selectors">
+                        <button class="ratio-btn active" data-ratio="square" data-width="768" data-height="768">
+                            <div class="ratio-box square"></div>
+                            <span>Square (1:1)</span>
+                        </button>
+                        <button class="ratio-btn" data-ratio="portrait" data-width="512" data-height="768">
+                            <div class="ratio-box portrait"></div>
+                            <span>Portrait (2:3)</span>
+                        </button>
+                        <button class="ratio-btn" data-ratio="landscape" data-width="768" data-height="512">
+                            <div class="ratio-box landscape"></div>
+                            <span>Landscape (3:2)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Model Customization (Accordion-like layout) -->
+                <div class="sidebar-section advanced-settings">
+                    <div class="advanced-header" id="toggleAdvanced">
+                        <h3 class="section-title"><i data-lucide="settings-2"></i> Advanced Settings</h3>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <div class="advanced-content collapsed" id="advancedContent">
+                        
+                        <!-- Guidance Scale -->
+                        <div class="input-block">
+                            <div class="label-row">
+                                <label for="guidanceScale">Guidance Scale</label>
+                                <span id="guidanceVal">7.0</span>
+                            </div>
+                            <input type="range" id="guidanceScale" min="1" max="20" step="0.5" value="7.0">
+                        </div>
+
+                        <!-- Seed Input -->
+                        <div class="input-block">
+                            <label for="seedInput">Custom Seed</label>
+                            <div class="seed-input-row">
+                                <input type="number" id="seedInput" value="-1" placeholder="Random seed (-1)">
+                                <button class="icon-btn" id="randomizeSeedBtn" title="Randomize Seed">
+                                    <i data-lucide="shuffle"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Negative Prompt -->
+                        <div class="input-block">
+                            <label for="negativePrompt">Negative Prompt</label>
+                            <textarea id="negativePrompt" placeholder="What to avoid (e.g. blurry, low quality, duplicate fingers)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- Right Side: Main Workspace containing Canvas & Prompt Input -->
+        <main class="app-main">
+            
+            <!-- Top Navigation Bar -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="icon-btn toggle-sidebar-btn" id="toggleSidebarBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="workspace-title-area">
+                        <h1 id="activeWorkspaceTitle">Untitled Workspace</h1>
+                        <span class="status-indicator" id="statusIndicator">Ready</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="action-btn secondary" id="clearWorkspaceBtn">
+                        <i data-lucide="trash-2"></i> Reset Workspace
+                    </button>
+                </div>
+            </header>
+
+            <!-- Middle Area: Interactive Canvas Workspace -->
+            <div class="workspace-view">
+                <div class="canvas-outer-wrapper" id="canvasOuterWrapper">
+                    
+                    <!-- Suggestions Panel (Displayed when workspace is empty) -->
+                    <div class="workspace-placeholder" id="workspacePlaceholder">
+                        <div class="placeholder-glow"></div>
+                        <div class="placeholder-content">
+                            <div class="logo-large-spark">
+                                <i data-lucide="sparkles"></i>
+                            </div>
+                            <h2>AetherImage Workspace</h2>
+                            <p>Generate high-quality images and edit them directly. Type a prompt below or try one of these suggestions:</p>
+                            
+                            <div class="suggestion-grid">
+                                <button class="suggestion-card" data-prompt="A detailed cyberpunk street at night, neon lights reflection, cinematic lighting, 8k resolution">
+                                    <div class="card-bg cyberpunk"></div>
+                                    <span>Cyberpunk Street</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="A cozy medieval wizard cottage hidden inside a massive glowing mushroom forest, watercolor fantasy art">
+                                    <div class="card-bg cottage"></div>
+                                    <span>Wizard Cottage</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="Abstract oil painting of a cosmic nebula shaped like a majestic cat, vibrant swirling colors, heavy impasto texture">
+                                    <div class="card-bg abstract"></div>
+                                    <span>Cosmic Cat Nebula</span>
+                                </button>
+                                <button class="suggestion-card" data-prompt="Hyper-detailed close up macro photography of a glass butterfly resting on a crystal flower, soft morning dew, fantasy glow">
+                                    <div class="card-bg glass"></div>
+                                    <span>Crystal Flower</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Image Canvas Element Container -->
+                    <div class="canvas-inner-container hidden" id="canvasInnerContainer">
+                        <div class="canvas-container-header">
+                            <div class="canvas-meta">
+                                <span id="currentImgDetails">Dimensions: 768 x 768px | Seed: 198282</span>
+                            </div>
+                            <div class="canvas-actions">
+                                <button class="icon-btn active-tool-indicator" id="activeToolIndicator" title="Active Tool: Pan & View">
+                                    <i data-lucide="move" id="activeToolIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Drawing / Filter Canvas Layer -->
+                        <div class="canvas-viewport" id="canvasViewport">
+                            <canvas id="imageCanvas"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Floating Canvas Editor Overlay Toolbox (Visible when an image is loaded) -->
+                <div class="canvas-editor-toolbox hidden" id="canvasEditorToolbox">
+                    <!-- Tool Categories -->
+                    <div class="toolbox-header">
+                        <h4><i data-lucide="wrench"></i> Editor Power</h4>
+                    </div>
+                    
+                    <div class="tool-section">
+                        <span class="tool-title">Tools</span>
+                        <div class="tool-buttons-row">
+                            <button class="tool-btn active" id="toolViewBtn" title="Pan and Zoom">
+                                <i data-lucide="move"></i>
+                                <span>Pan/Zoom</span>
+                            </button>
+                            <button class="tool-btn" id="toolDrawBtn" title="Draw on Image">
+                                <i data-lucide="brush"></i>
+                                <span>Brush</span>
+                            </button>
+                            <button class="tool-btn" id="toolCropBtn" title="Crop Image">
+                                <i data-lucide="crop"></i>
+                                <span>Crop</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Brush Config options (Hidden unless Brush is active) -->
+                    <div class="tool-config-panel hidden" id="brushConfigPanel">
+                        <span class="tool-title">Brush Config</span>
+                        <div class="brush-settings">
+                            <!-- Brush Size -->
+                            <div class="brush-row">
+                                <label for="brushSize">Size</label>
+                                <input type="range" id="brushSize" min="1" max="50" value="8">
+                                <span id="brushSizeVal">8px</span>
+                            </div>
+                            <!-- Brush Color -->
+                            <div class="brush-row">
+                                <label>Color</label>
+                                <div class="color-picker-row">
+                                    <button class="color-dot active" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                                    <button class="color-dot" style="background-color: #000000;" data-color="#000000"></button>
+                                    <button class="color-dot" style="background-color: #e53935;" data-color="#e53935"></button>
+                                    <button class="color-dot" style="background-color: #fdd835;" data-color="#fdd835"></button>
+                                    <button class="color-dot" style="background-color: #4caf50;" data-color="#4caf50"></button>
+                                    <button class="color-dot" style="background-color: #00bcd4;" data-color="#00bcd4"></button>
+                                    <button class="color-dot" style="background-color: #7c4dff;" data-color="#7c4dff"></button>
+                                    <div class="custom-color-input-container">
+                                        <input type="color" id="customColorPicker" value="#7c4dff">
+                                        <i data-lucide="palette"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pixel Filters config option -->
+                    <div class="tool-section">
+                        <span class="tool-title">Filters</span>
+                        <div class="filters-grid">
+                            <button class="filter-btn" data-filter="reset">Normal</button>
+                            <button class="filter-btn" data-filter="grayscale">Grayscale</button>
+                            <button class="filter-btn" data-filter="sepia">Sepia</button>
+                            <button class="filter-btn" data-filter="vintage">Vintage</button>
+                            <button class="filter-btn" data-filter="blur">Blur</button>
+                            <button class="filter-btn" data-filter="saturate">Saturate</button>
+                            <button class="filter-btn" data-filter="highcontrast">Contrast</button>
+                        </div>
+                    </div>
+
+                    <div class="tool-section footer-actions">
+                        <button class="action-btn text-btn" id="refinePromptBtn" title="Refine based on this image">
+                            <i data-lucide="refresh-cw"></i> Refine Prompt
+                        </button>
+                        <div class="canvas-utility-row">
+                            <button class="icon-btn" id="undoBtn" title="Undo Edit"><i data-lucide="undo-2"></i></button>
+                            <button class="action-btn primary" id="saveCanvasBtn" title="Download Finished Image">
+                                <i data-lucide="download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Area: Large Prompting Interface & Context Memory Chips -->
+            <footer class="prompter-area">
+                <div class="prompter-inner">
+                    
+                    <!-- Context Memory Chips Container -->
+                    <div class="memory-context-bar" id="memoryContextBar">
+                        <div class="memory-header">
+                            <div class="memory-title">
+                                <i data-lucide="brain-circuit"></i>
+                                <span>Context Memory</span>
+                            </div>
+                            <div class="memory-options">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="rememberStyleToggle" checked>
+                                    <span class="slider"></span>
+                                    <span class="toggle-label">Style</span>
+                                </label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="rememberElementsToggle">
+                                    <span class="slider"></span>
+                                    <span class="toggle-label">Elements</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="memory-chips" id="memoryChips">
+                            <!-- Populated with memory keyword tags like "Cyberpunk", "Watercolor", "Oil Painting" -->
+                            <span class="empty-memory-text">No active memory chips. Generate an image to record style context.</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Bar Container -->
+                    <div class="prompt-input-container">
+                        <textarea id="promptInput" placeholder="Describe the image you want to generate in detail (e.g. 'A futuristic cyborg astronaut sitting on a park bench reading a book...')"></textarea>
+                        
+                        <div class="prompt-actions">
+                            <button class="prompt-action-btn" id="enhancePromptBtn" title="Enhance prompt automatically using keywords and artistic tokens">
+                                <i data-lucide="wand-sparkles"></i> Enhance
+                            </button>
+                            <button class="generate-trigger-btn" id="generateBtn">
+                                <span>Generate</span>
+                                <i data-lucide="arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Modals or Toast Notices -->
+    <div class="toast-notification hidden" id="toastNotification">
+        <i data-lucide="info" class="toast-icon" id="toastIcon"></i>
+        <span class="toast-message" id="toastMessage">Loading assets...</span>
+    </div>
+
+    <!-- Application Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
