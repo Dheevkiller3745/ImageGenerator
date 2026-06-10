@@ -18,13 +18,13 @@ export async function proxy(request: NextRequest) {
       },
       setAll(cookiesToSet: any) {
         cookiesToSet.forEach(({ name, value, options }: any) => {
-          request.cookies.set({ name, value, ...options });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({ name, value, ...options });
+          request.cookies.set(name, value);
+        });
+        response = NextResponse.next({
+          request,
+        });
+        cookiesToSet.forEach(({ name, value, options }: any) => {
+          response.cookies.set(name, value, options);
         });
       },
     },

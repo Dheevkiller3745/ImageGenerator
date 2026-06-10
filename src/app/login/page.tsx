@@ -44,7 +44,7 @@ export default function LoginPage() {
         
         if (data.session) {
           // Instantly logged in (e.g. email verification disabled)
-          await logSessionAPI();
+          logSessionAPI();
           window.location.href = '/workspace';
         } else {
           setSuccessMsg("Account created! Please check your email to verify your address.");
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
         if (error) throw error;
         
-        await logSessionAPI();
+        logSessionAPI();
         window.location.href = '/workspace';
       }
     } catch (err: any) {
