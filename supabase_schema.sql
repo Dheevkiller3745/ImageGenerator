@@ -66,15 +66,13 @@ create policy "Allow admin reads on sessions" on public.user_sessions
   for select using (auth.jwt() ->> 'email' like '%@statics.agency');
 
 -- Generations Log
-create policy "Allow public inserts to generations_log" on public.generations_log
-  for insert with check (true);
+
 
 create policy "Allow admin reads on generations_log" on public.generations_log
   for select using (auth.jwt() ->> 'email' like '%@statics.agency');
 
 -- Leads Log
-create policy "Allow public inserts to leads_log" on public.leads_log
-  for insert with check (true);
+
 
 create policy "Allow admin reads on leads_log" on public.leads_log
   for select using (auth.jwt() ->> 'email' like '%@statics.agency');
@@ -91,8 +89,11 @@ begin
     new.raw_user_meta_data->>'avatar_url'
   );
   return new;
-end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer set search_path = public;
+
+-- Revoke public execute to fix security warning
+revoke execute on function public.handle_new_user() from public;
+revoke execute on function public.handle_new_user() from anon, authenticated;
 
 create or replace trigger on_auth_user_created
   after insert on auth.users
