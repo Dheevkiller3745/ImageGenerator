@@ -38,8 +38,8 @@ export default function LandingPage() {
       )
     },
     {
-      title: "2. The Vessel (Canvas Sketch)",
-      desc: "Draw layout intentions directly onto our HTML5 Canvas. Guide the composition structure and define color borders with zero friction.",
+      title: "2. The Vessel (Interactive Sketch)",
+      desc: "Draw layout structures directly onto our studio canvas. Guide the composition structure and define color regions with zero friction.",
       icon: <Paintbrush className="w-5 h-5 text-[#ff4081]" />,
       mockup: (
         <div className="relative w-full h-[140px] flex items-center justify-center bg-black/40 border border-white/5 rounded-xl overflow-hidden">
@@ -62,13 +62,13 @@ export default function LandingPage() {
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             />
           </svg>
-          <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/30 uppercase tracking-widest">HTML5 Draw Active</span>
+          <span className="absolute bottom-2 right-2 text-[8px] font-mono text-white/30 uppercase tracking-widest">Design Studio Active</span>
         </div>
       )
     },
     {
-      title: "3. The Synthesis (Neural Merge)",
-      desc: "Our API layer binds your prompt and drawing layout, generating high-fidelity output. Download or refine pixel-wise instantly.",
+      title: "3. The Synthesis (Visual Render)",
+      desc: "Our design engine merges your visual sketch and description to render your high-fidelity brand asset instantly.",
       icon: <Layers className="w-5 h-5 text-cyan-400" />,
       mockup: (
         <div className="relative w-full h-[140px] flex items-center justify-center bg-black/40 border border-white/5 rounded-xl overflow-hidden">
@@ -94,7 +94,7 @@ export default function LandingPage() {
           >
             <div className="text-center">
               <span className="text-[10px] font-mono font-bold text-white tracking-wider uppercase block">Synthesis Complete</span>
-              <span className="text-[8px] font-mono text-white/50 block mt-1">Temporary Image Baked</span>
+              <span className="text-[8px] font-mono text-white/50 block mt-1">Creative Render Baked</span>
             </div>
           </motion.div>
         </div>
@@ -262,7 +262,7 @@ export default function LandingPage() {
               <div className="flex gap-2">
                 <div className="w-7 h-7 rounded bg-white/5 border border-white/10 flex items-center justify-center"><Paintbrush className="w-3.5 h-3.5 text-[#ff4081]" /></div>
                 <div className="flex-1 p-2 bg-white/5 border border-white/5 rounded text-[8px] text-white/50 font-mono flex items-center justify-between">
-                  <span>Engine: Puter AI (Local Proxy)</span>
+                  <span>Engine: Creative Studio Engine (Cloud)</span>
                   <span className="text-green-400">Ready</span>
                 </div>
               </div>
@@ -345,9 +345,9 @@ export default function LandingPage() {
         <section className="px-6 lg:px-16 py-24 max-w-5xl mx-auto w-full flex flex-col gap-12">
           
           <div className="text-center flex flex-col gap-3">
-            <h2 className="text-3xl font-bold font-display text-white">Built for Complete Autonomy</h2>
+            <h2 className="text-3xl font-bold font-display text-white">Built for Creative Autonomy</h2>
             <p className="text-sm text-[#8e909c] max-w-md mx-auto">
-              Our monorepo matches local developer convenience with production stability.
+              Professional-grade creative tools designed to supercharge your design workflows.
             </p>
           </div>
 
@@ -357,9 +357,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 rounded-xl bg-[#7c4dff]/10 flex items-center justify-center">
                 <ShieldCheck className="w-5 h-5 text-[#9e75ff]" />
               </div>
-              <h4 className="font-bold text-base text-white">Zero-Friction SPA</h4>
+              <h4 className="font-bold text-base text-white">Lightning-Fast Design Engine</h4>
               <p className="text-xs text-[#8e909c] leading-relaxed">
-                Next.js compiles into a clean Single Page Application export inside the <code>out/</code> folder, mounted directly in FastAPI. No CORS bottlenecks.
+                Our serverless interface updates instantly in real-time. Experience lag-free generation with zero loading bottlenecks.
               </p>
             </div>
 
@@ -367,9 +367,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 rounded-xl bg-[#ff4081]/10 flex items-center justify-center">
                 <Layers className="w-5 h-5 text-[#ff4081]" />
               </div>
-              <h4 className="font-bold text-base text-white">Keyless Free Generation</h4>
+              <h4 className="font-bold text-base text-white">Infinite High-Fidelity Rendering</h4>
               <p className="text-xs text-[#8e909c] leading-relaxed">
-                Our backend automatically routes to free, keyless AI pipelines (like Pollinations.ai or simulated Perchance APIs) when Cloudflare blocks occur, guaranteeing 100% uptime.
+                Our multi-engine routing automatically selects the fastest available model, guaranteeing maximum uptime and instant generation.
               </p>
             </div>
 
@@ -377,9 +377,9 @@ export default function LandingPage() {
               <div className="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-cyan-400" />
               </div>
-              <h4 className="font-bold text-base text-white">Telemetry & Leads Log</h4>
+              <h4 className="font-bold text-base text-white">Smart Collaboration & Feedback</h4>
               <p className="text-xs text-[#8e909c] leading-relaxed">
-                Connected to Supabase to log prompt seeds for context history, logging user email conversions to coordinate WhatsApp upscaling handoffs.
+                Keep track of your creative style history while logging leads automatically for collaborative upscaling and client-ready feedback.
               </p>
             </div>
 

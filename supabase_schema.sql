@@ -92,12 +92,24 @@ create policy "Allow admin reads on generations_log"
   for select
   using (auth.jwt() ->> 'email' like '%@statics.agency');
 
+drop policy if exists "Allow inserts on generations_log" on public.generations_log;
+create policy "Allow inserts on generations_log"
+  on public.generations_log
+  for insert
+  with check (auth.uid() = user_id or user_id is null);
+
 -- Leads Log
 drop policy if exists "Allow admin reads on leads_log" on public.leads_log;
 create policy "Allow admin reads on leads_log"
   on public.leads_log
   for select
   using (auth.jwt() ->> 'email' like '%@statics.agency');
+
+drop policy if exists "Allow inserts on leads_log" on public.leads_log;
+create policy "Allow inserts on leads_log"
+  on public.leads_log
+  for insert
+  with check (true);
 
 -- =========================
 -- 4) Trigger Function (create or replace)

@@ -230,12 +230,12 @@ export default function WorkspacePage() {
               <option value="puter" className="bg-[#09090c]">Puter AI (Fast, Free & Stable)</option>
               <option value="pollinations" className="bg-[#09090c]">Pollinations AI (No-key & Rapid)</option>
               <option value="openai" className="bg-[#09090c]">OpenAI DALL-E 3 (Real API)</option>
-              <option value="perchance" className="bg-[#09090c]">Perchance API (Local Proxy)</option>
+              <option value="perchance" className="bg-[#09090c]">Perchance Engine (Serverless)</option>
             </select>
             {store.currentEngine === 'perchance' && (
-              <div className="warning-box mt-2.5 p-3 rounded-xl bg-[#ff9800]/5 border border-[#ff9800]/15 text-[#ffb74d] text-[10px] flex gap-2.5 items-start leading-relaxed">
-                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <span>Requires local python server. Might challenge Turnstile verification.</span>
+              <div className="warning-box mt-2.5 p-3 rounded-xl bg-[#7c4dff]/5 border border-[#7c4dff]/15 text-[#9e75ff] text-[10px] flex gap-2.5 items-start leading-relaxed">
+                <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>Runs securely on the cloud serverless endpoint.</span>
               </div>
             )}
           </div>
