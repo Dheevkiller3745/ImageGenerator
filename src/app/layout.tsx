@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -31,7 +32,10 @@ export default function RootLayout({
       <head>
         <Script src="https://js.puter.com/v2/" strategy="afterInteractive" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#09090c] font-sans">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#09090c] font-sans">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
