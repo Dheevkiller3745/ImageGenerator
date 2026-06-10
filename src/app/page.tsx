@@ -120,7 +120,7 @@ export default function LandingPage() {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <h2 className="text-xl font-bold font-display tracking-tight text-white">
-            Aether<span className="text-[#7c4dff] font-normal">Image</span>
+            STATICs<span className="text-zinc-500 font-normal"> Workspace</span>
           </h2>
         </div>
         <div>
@@ -165,7 +165,7 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-base text-[#8e909c] leading-relaxed max-w-xl mx-auto lg:mx-0"
             >
-              AetherImage marries intuitive freehand drawing with modern neural generation. Guide the AI's layout directly on a glassmorphic canvas, build complex context memory, and download high-resolution outputs instantly.
+              STATICs marries intuitive freehand drawing with modern neural generation. Guide the AI's layout directly on a glassmorphic canvas, build complex context memory, and download high-resolution outputs instantly.
             </motion.p>
 
             <motion.div 
@@ -204,7 +204,7 @@ export default function LandingPage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></span>
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
                 </div>
-                <span className="text-[9px] font-mono text-white/30 uppercase tracking-wider">AetherImage Workspace Preview</span>
+                <span className="text-[9px] font-mono text-white/30 uppercase tracking-wider">STATICs Workspace Preview</span>
               </div>
 
               {/* Main inner canvas animation simulation */}
@@ -412,7 +412,7 @@ export default function LandingPage() {
       {/* Footer bar */}
       <footer className="w-full h-[80px] px-6 lg:px-16 flex justify-between items-center border-t border-white/5 bg-black/40 z-30">
         <span className="text-[10px] text-[#535562] font-mono uppercase tracking-wider">
-          © {new Date().getFullYear()} AetherImage. By STATICs Agency.
+          © {new Date().getFullYear()} STATICs Agency. All rights reserved.
         </span>
         <span className="text-[10px] text-[#535562] flex items-center gap-1 font-mono uppercase tracking-wider">
           Crafted with <Heart className="w-3.5 h-3.5 text-red-500 fill-current animate-pulse" /> for Autonomy

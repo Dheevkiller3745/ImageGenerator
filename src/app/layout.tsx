@@ -14,7 +14,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "AetherImage - AI Generation Workspace",
+  title: "STATICs - Enterprise AI Workspace",
   description: "A professional image generation workspace with canvas editing and context memory.",
 };
 

@@ -119,7 +119,7 @@ export default function WorkspacePage() {
 
     const currentPrompt = store.activePrompt || "No prompt provided";
     const whatsappPhone = "+1234567890"; // Configurable target WhatsApp number
-    const chatMessage = `Hello! I generated an image on AetherImage.\n\nPrompt: "${currentPrompt}"\nSeed: ${store.seed}\nEngine: ${store.currentEngine}\nAspect Ratio: ${store.aspectRatio}\n\nMy name is ${leadName}. Please help me refine this design!`;
+    const chatMessage = `Hello! I generated an image on STATICs.\n\nPrompt: "${currentPrompt}"\nSeed: ${store.seed}\nEngine: ${store.currentEngine}\nAspect Ratio: ${store.aspectRatio}\n\nMy name is ${leadName}. Please help me refine this design!`;
     const whatsappUri = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(chatMessage)}`;
 
     setLeadSubmitting(true);
@@ -171,7 +171,7 @@ export default function WorkspacePage() {
               <div className="spark-icon-container bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] w-8 h-8 rounded-md flex items-center justify-center shadow-[0_4px_12px_rgba(124,77,255,0.35)]">
                 <Sparkles className="w-4.5 h-4.5 text-white" />
               </div>
-              <h2 className="text-xl font-bold font-display tracking-tight text-white">Aether<span className="text-[#7c4dff] font-normal">Image</span></h2>
+              <h2 className="text-xl font-bold font-display tracking-tight text-white">STATICs<span className="text-zinc-500 font-normal"> Workspace</span></h2>
             </Link>
           </div>
           <button 

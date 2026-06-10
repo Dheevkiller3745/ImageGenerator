@@ -99,24 +99,23 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen bg-[#09090c] text-[#f3f3f6] flex items-center justify-center p-4 font-sans overflow-hidden">
-      {/* Background radial glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,_rgba(124,77,255,0.1)_0%,_transparent_70%)] pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,_rgba(255,64,129,0.05)_0%,_transparent_70%)] pointer-events-none"></div>
+      {/* Subtle SaaS grid background */}
+      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
       <div className="w-full max-w-[440px] z-30">
         {/* Glassmorphic Auth Box */}
         <div className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_24px_64px_rgba(0,0,0,0.6)] relative overflow-hidden">
           
           {/* Header */}
-          <div className="text-center flex flex-col items-center gap-3.5 mb-8">
-            <div className="spark-icon-container bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] w-10 h-10 rounded-xl flex items-center justify-center shadow-[0_4px_16px_rgba(124,77,255,0.25)]">
-              <Sparkles className="w-5.5 h-5.5 text-white" />
+          <div className="text-center flex flex-col items-center gap-4 mb-8">
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+              <Sparkles className="w-6 h-6 text-black" />
             </div>
             <div>
               <h2 className="text-2xl font-bold font-display tracking-tight text-white">
-                Aether<span className="text-[#7c4dff] font-normal">Image</span>
+                STATICs
               </h2>
-              <p className="text-[11px] text-white/40 uppercase tracking-widest mt-1">Enterprise Portal</p>
+              <p className="text-[11px] text-zinc-400 uppercase tracking-widest mt-1">Enterprise Auth</p>
             </div>
           </div>
 
@@ -124,25 +123,25 @@ export default function LoginPage() {
           <div className="flex bg-white/5 border border-white/5 p-1 rounded-xl mb-6 relative">
             <button
               onClick={() => { setIsSignUp(false); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-white' : 'text-white/40'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-black' : 'text-zinc-400'}`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsSignUp(true); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-colors z-10 cursor-pointer ${isSignUp ? 'text-white' : 'text-white/40'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${isSignUp ? 'text-black' : 'text-zinc-400'}`}
             >
               Create Account
             </button>
             <motion.div
-              className="absolute top-1 bottom-1 bg-white/5 rounded-lg border border-white/10"
+              className="absolute top-1 bottom-1 bg-white rounded-md shadow-sm"
               layout
               initial={false}
               animate={{
                 left: isSignUp ? '50%' : '4px',
                 right: isSignUp ? '4px' : '50%',
               }}
-              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             />
           </div>
 
@@ -210,7 +209,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] text-white text-xs font-bold py-3.5 rounded-xl mt-2 cursor-pointer flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(124,77,255,0.3)] hover:shadow-[0_8px_24px_rgba(124,77,255,0.45)] hover:scale-[1.01] active:scale-100 disabled:opacity-50 transition-all"
+              className="w-full bg-white text-black text-xs font-bold py-3.5 rounded-xl mt-2 cursor-pointer flex items-center justify-center gap-2 hover:bg-zinc-200 active:scale-[0.98] disabled:opacity-50 transition-all"
             >
               <span>{loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -228,9 +227,9 @@ export default function LoginPage() {
           <button
             onClick={handleGoogleLogin}
             type="button"
-            className="w-full glass-panel glass-panel-hover border border-white/5 text-white text-xs font-semibold py-3 rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all"
+            className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs font-semibold py-3 rounded-xl cursor-pointer flex items-center justify-center gap-2 hover:bg-zinc-800 transition-all"
           >
-            <Chrome className="w-4 h-4 text-[#ff4081]" />
+            <Chrome className="w-4 h-4 text-white" />
             <span>Continue with Google</span>
           </button>
 

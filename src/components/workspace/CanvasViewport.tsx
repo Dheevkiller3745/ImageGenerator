@@ -292,7 +292,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
               <div className="logo-large-spark w-16 h-16 mx-auto mb-6 bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] rounded-[20px] flex items-center justify-center shadow-[0_8px_24px_rgba(124,77,255,0.35)]">
                 <Undo2 className="w-8 h-8 text-white rotate-45" />
               </div>
-              <h2 className="text-2xl font-bold mb-3">AetherImage Workspace</h2>
+              <h2 className="text-2xl font-bold mb-3">STATICs Workspace</h2>
               <p className="text-sm text-[#8e909c] mb-8 leading-relaxed">
                 Generate high-quality images and edit them directly. Enter a prompt below to launch drawing sessions.
               </p>
