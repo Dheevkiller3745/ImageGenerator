@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createServerClient } from '@/utils/serverSupabaseClient';
 import { supabaseAdmin } from '@/utils/supabaseClient';
 
@@ -160,6 +160,7 @@ export async function POST(req: Request) {
       });
     }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Perchance route exception:", error);
     return NextResponse.json({ detail: error.message || "Failed to generate image" }, { status: 500 });

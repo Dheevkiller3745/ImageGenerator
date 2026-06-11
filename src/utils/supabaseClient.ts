@@ -11,6 +11,7 @@ export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key';
 
 export const supabaseAdmin = typeof window !== 'undefined'
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ? (null as any)
   : createClient(supabaseUrl, serviceRoleKey, {
       auth: {

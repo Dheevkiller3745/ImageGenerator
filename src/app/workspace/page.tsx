@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useWorkspaceStore, HistoryItem } from '@/store/useWorkspaceStore';
 import { CanvasViewport } from '@/components/workspace/CanvasViewport';
 import { PromptController } from '@/components/workspace/PromptController';
 import { supabase } from '@/utils/supabaseClient';
+import { Navbar } from '@/components/Navbar';
 import { 
-  Sparkles, Plus, Cpu, Maximize, Settings2, ChevronDown, 
-  Shuffle, AlertTriangle, Menu, X, Trash2, Send, Info, MessageSquareCode
+  Plus, Cpu, Maximize, Settings2, ChevronDown, 
+  Shuffle, Menu, X, Send, Info, MessageSquareCode
 } from 'lucide-react';
 
 export default function WorkspacePage() {
@@ -55,20 +55,20 @@ export default function WorkspacePage() {
   // Initialise app state
   useEffect(() => {
     // If store history is empty, create a placeholder workspace
-    if (store.history.length === 0) {
-      // Just waiting for user input
-    } else {
+    if (store.history.length > 0) {
       const latest = store.history[0];
-      setActiveWorkspaceId(latest.id);
-      setActiveImage(latest.imageUrl);
-      setEditedImage(null);
-      setUndoStack([latest.imageUrl]);
-      store.setPrompt(latest.prompt);
-      store.setSeed(latest.seed);
-      store.setEngine(latest.engine as any);
-      store.setAspectRatio(latest.aspectRatio as any);
+      setTimeout(() => {
+        setActiveWorkspaceId(latest.id);
+        setActiveImage(latest.imageUrl);
+        setEditedImage(null);
+        setUndoStack([latest.imageUrl]);
+        store.setPrompt(latest.prompt);
+        store.setSeed(latest.seed);
+        store.setEngine(latest.engine as 'puter' | 'pollinations' | 'perchance' | 'openai');
+        store.setAspectRatio(latest.aspectRatio as 'square' | 'portrait' | 'landscape');
+      }, 0);
     }
-  }, []);
+  }, [store]);
 
   // Sync details when an item is selected from history
   const selectHistoryItem = (item: HistoryItem) => {
@@ -80,12 +80,12 @@ export default function WorkspacePage() {
     // Set parameters
     store.setPrompt(item.prompt);
     store.setSeed(item.seed);
-    store.setEngine(item.engine as any);
-    store.setAspectRatio(item.aspectRatio as any);
+    store.setEngine(item.engine as 'puter' | 'pollinations' | 'perchance' | 'openai');
+    store.setAspectRatio(item.aspectRatio as 'square' | 'portrait' | 'landscape');
     showToast(`Loaded: ${item.prompt.substring(0, 20)}...`);
   };
 
-  const handleImageGenerated = (dataUrl: string, seed: number) => {
+  const handleImageGenerated = (dataUrl: string) => {
     setActiveImage(dataUrl);
     setEditedImage(null);
     setUndoStack([dataUrl]);
@@ -156,27 +156,23 @@ export default function WorkspacePage() {
   };
 
   return (
-    <div className="app-container grid grid-cols-1 lg:grid-cols-[320px_1fr] h-screen w-screen overflow-hidden bg-[#09090c] text-[#f3f3f6] relative">
+    <div className="app-container flex flex-col lg:grid lg:grid-cols-[320px_1fr] h-screen w-screen overflow-hidden bg-background text-foreground relative transition-colors duration-300 pt-[80px]">
+      <Navbar />
       {/* Background glow filters */}
-      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[radial-gradient(circle,_rgba(124,77,255,0.04)_0%,_transparent_70%)] pointer-events-none z-10"></div>
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[radial-gradient(circle,_rgba(255,64,129,0.02)_0%,_transparent_70%)] pointer-events-none z-10"></div>
+      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[radial-gradient(circle,var(--primary-glow)_0%,_transparent_70%)] pointer-events-none z-10"></div>
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none z-10"></div>
       
       {/* Sidebar Controls */}
-      <aside className={`app-sidebar glass-panel-heavy border-r border-white/5 flex flex-col h-screen z-50 transition-all duration-300 fixed lg:relative left-0 top-0 bottom-0 w-[320px] lg:translate-x-0 ${
+      <aside className={`app-sidebar glass-panel-heavy border-r border-[var(--panel-border)] flex flex-col h-full z-40 transition-all duration-300 fixed lg:relative left-0 top-[80px] bottom-0 w-[320px] lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0 shadow-[12px_0_36px_rgba(0,0,0,0.6)]' : '-translate-x-full'
       }`}>
-        <div className="sidebar-header p-6 flex justify-between items-center">
+        <div className="sidebar-header p-6 flex justify-between items-center lg:hidden">
           <div className="logo-area flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-              <div className="spark-icon-container bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] w-8 h-8 rounded-md flex items-center justify-center shadow-[0_4px_12px_rgba(124,77,255,0.35)]">
-                <Sparkles className="w-4.5 h-4.5 text-white" />
-              </div>
-              <h2 className="text-xl font-bold font-display tracking-tight text-white">STATICs<span className="text-zinc-500 font-normal"> Workspace</span></h2>
-            </Link>
+            <h2 className="text-xl font-bold font-display tracking-tight text-foreground">Menu</h2>
           </div>
           <button 
             onClick={() => setSidebarOpen(false)}
-            className="icon-btn close-sidebar-btn lg:hidden flex items-center justify-center p-2 rounded-md bg-white/[0.03] border border-white/5 text-white cursor-pointer"
+            className="icon-btn close-sidebar-btn lg:hidden flex items-center justify-center p-2 rounded-md bg-[var(--panel-bg)] border border-[var(--panel-border)] text-foreground cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -219,12 +215,12 @@ export default function WorkspacePage() {
 
           {/* Engine Select */}
           <div className="sidebar-section flex flex-col gap-3">
-            <h3 className="section-title text-[11px] uppercase tracking-wider text-[#8e909c] flex items-center gap-2 font-bold">
-              <Cpu className="w-3.5 h-3.5 text-[#7c4dff]" /> AI Engine
+            <h3 className="section-title text-[11px] uppercase tracking-wider text-foreground/60 flex items-center gap-2 font-bold">
+              <Cpu className="w-3.5 h-3.5 text-[#7c4dff]" /> AI Model
             </h3>
             <select 
               value={store.currentEngine}
-              onChange={(e) => store.setEngine(e.target.value as any)}
+              onChange={(e) => store.setEngine(e.target.value as 'puter' | 'pollinations' | 'perchance' | 'openai')}
               className="w-full glass-input rounded-xl p-3 outline-none text-xs cursor-pointer text-white"
             >
               <option value="puter" className="bg-[#09090c]">Puter AI (Fast, Free & Stable)</option>
@@ -253,7 +249,7 @@ export default function WorkspacePage() {
               ].map((r) => (
                 <button 
                   key={r.val}
-                  onClick={() => store.setAspectRatio(r.val as any)}
+                  onClick={() => store.setAspectRatio(r.val as 'square' | 'portrait' | 'landscape')}
                   className={`ratio-btn flex flex-col items-center gap-2 p-3 border rounded-xl transition-all cursor-pointer ${
                     store.aspectRatio === r.val 
                       ? 'bg-[#7c4dff]/15 border-[#7c4dff]/30 text-white font-bold' 
@@ -284,8 +280,8 @@ export default function WorkspacePage() {
             {advancedOpen && (
               <div className="advanced-content mt-4 flex flex-col gap-4">
                 <div className="input-block flex flex-col gap-2">
-                  <div className="label-row flex justify-between items-center text-xs text-[#8e909c]">
-                    <label>Guidance Scale</label>
+                  <div className="label-row flex justify-between items-center text-xs text-foreground/60">
+                    <label>Creativity Level</label>
                     <span className="font-semibold text-[#9e75ff] bg-[#7c4dff]/10 px-1.5 py-0.5 rounded">{store.guidanceScale.toFixed(1)}</span>
                   </div>
                   <input 
@@ -300,14 +296,14 @@ export default function WorkspacePage() {
                 </div>
 
                 <div className="input-block flex flex-col gap-2">
-                  <label className="text-xs text-[#8e909c]">Custom Seed</label>
+                  <label className="text-xs text-foreground/60">Variation Number</label>
                   <div className="seed-input-row flex gap-2">
                     <input 
                       type="number" 
                       value={store.seed}
                       onChange={(e) => store.setSeed(parseInt(e.target.value) || -1)}
-                      placeholder="Random seed (-1)"
-                      className="flex-1 glass-input rounded-xl p-2.5 text-xs text-white outline-none"
+                      placeholder="Random (-1)"
+                      className="flex-1 glass-input rounded-xl p-2.5 text-xs text-foreground outline-none"
                     />
                     <button 
                       onClick={() => store.setSeed(-1)}
@@ -320,12 +316,12 @@ export default function WorkspacePage() {
                 </div>
 
                 <div className="input-block flex flex-col gap-2">
-                  <label className="text-xs text-[#8e909c]">Negative Prompt</label>
+                  <label className="text-xs text-foreground/60">What to avoid</label>
                   <textarea 
                     value={store.negativePrompt}
                     onChange={(e) => store.setNegativePrompt(e.target.value)}
                     placeholder="Things to avoid (e.g. blurry, low quality)"
-                    className="w-full h-20 glass-input rounded-xl p-2.5 text-xs text-white outline-none resize-none"
+                    className="w-full h-20 glass-input rounded-xl p-2.5 text-xs text-foreground outline-none resize-none"
                   />
                 </div>
               </div>
@@ -372,47 +368,20 @@ export default function WorkspacePage() {
       </aside>
 
       {/* Main Workspace */}
-      <main className="app-main flex flex-col h-screen overflow-hidden relative">
-        <header className="main-header h-[70px] border-b border-white/5 bg-[#09090c]/40 backdrop-blur-md px-6 flex justify-between items-center z-40">
+      <main className="app-main flex flex-col h-full overflow-hidden relative">
+        <header className="main-header h-[50px] border-b border-[var(--panel-border)] bg-[var(--panel-bg)] backdrop-blur-md px-6 flex justify-between items-center z-30 lg:hidden">
           <div className="header-left flex items-center gap-4">
             <button 
               onClick={() => setSidebarOpen(true)}
-              className="icon-btn toggle-sidebar-btn lg:hidden flex items-center justify-center p-2 rounded-md bg-white/[0.03] border border-white/5 text-white cursor-pointer"
+              className="icon-btn toggle-sidebar-btn lg:hidden flex items-center justify-center p-2 rounded-md bg-[var(--panel-bg)] border border-[var(--panel-border)] text-foreground cursor-pointer"
             >
               <Menu className="w-4 h-4" />
             </button>
             <div className="workspace-title-area flex items-center gap-3">
-              <h1 id="activeWorkspaceTitle" className="text-base font-bold font-display truncate max-w-[150px] sm:max-w-xs md:max-w-md">
-                {store.activePrompt ? store.activePrompt.substring(0, 30) + '...' : 'Untitled Workspace'}
+              <h1 id="activeWorkspaceTitle" className="text-sm font-bold font-display truncate max-w-[150px]">
+                {store.activePrompt ? store.activePrompt.substring(0, 30) + '...' : 'Untitled'}
               </h1>
-              <span className={`status-indicator text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 bg-green-500/10 text-[#4caf50] before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full before:bg-current before:shadow-[0_0_6px_currentColor] ${
-                isGenerating ? 'generating bg-orange-500/10 text-[#ff9800]' : ''
-              }`}>
-                {isGenerating ? 'Generating...' : 'Ready'}
-              </span>
             </div>
-          </div>
-          <div className="header-right flex items-center gap-3">
-            <Link href="/admin">
-              <button className="glass-panel glass-panel-hover flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl text-white/70 hover:text-white transition-all cursor-pointer">
-                Admin Panel
-              </button>
-            </Link>
-            <button 
-              onClick={async () => {
-                await supabase.auth.signOut();
-                window.location.href = '/login';
-              }}
-              className="glass-panel glass-panel-hover flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl text-white/70 hover:text-white transition-all cursor-pointer"
-            >
-              Sign Out
-            </button>
-            <button 
-              onClick={handleResetWorkspace}
-              className="glass-panel glass-panel-hover flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-xl text-white/70 hover:text-white transition-all cursor-pointer"
-            >
-              <Trash2 className="w-4 h-4" /> Reset Workspace
-            </button>
           </div>
         </header>
 

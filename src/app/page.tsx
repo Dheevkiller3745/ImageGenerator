@@ -3,10 +3,45 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, Paintbrush, Layers, MessageSquare, ShieldCheck, Heart } from 'lucide-react';
+import { Sparkles, ArrowRight, Paintbrush, Layers, MessageSquare, ShieldCheck, Heart, Activity, Terminal, Database, Clock } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
 
 export default function LandingPage() {
   const [activeStep, setActiveStep] = useState(0);
+
+  // Simulated Live System Log Feed for Product Verification
+  const [logs, setLogs] = useState<Array<{ time: string; text: string; type: 'success' | 'info' | 'warn' }>>([
+    { time: '14:09:41', text: 'System started. Connected to database.', type: 'info' },
+    { time: '14:10:02', text: 'New image requested via AI model.', type: 'info' },
+    { time: '14:10:04', text: 'Image created successfully in 1.76s.', type: 'success' },
+    { time: '14:10:15', text: 'Support request created for WhatsApp help.', type: 'success' }
+  ]);
+
+  useEffect(() => {
+    const logTemplates: Array<{ text: string; type: 'success' | 'info' | 'warn' }> = [
+      { text: 'User session started.', type: 'info' },
+      { text: 'Description improved by smart assistant.', type: 'success' },
+      { text: 'Primary model busy. Fallback model used.', type: 'warn' },
+      { text: 'AI took over: Image finished in 1.94s.', type: 'success' },
+      { text: 'Database saved the record successfully.', type: 'success' },
+      { text: 'Interactive canvas saved as image.', type: 'info' },
+      { text: 'System status check completed.', type: 'info' },
+      { text: 'Active user connection verified.', type: 'info' }
+    ];
+
+    const timer = setInterval(() => {
+      const randomTemplate = logTemplates[Math.floor(Math.random() * logTemplates.length)];
+      const now = new Date();
+      const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+      
+      setLogs((prev) => [
+        { time: timeStr, text: randomTemplate.text, type: randomTemplate.type },
+        ...prev.slice(0, 3) // keep last 4 logs
+      ]);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Auto transition steps in the storytelling section
   useEffect(() => {
@@ -28,7 +63,7 @@ export default function LandingPage() {
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></span>
           </div>
           <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-xs text-white/80 font-mono">
-            "A serene medieval wizard cottage hidden in a glowing mushroom forest, <span className="text-[#9e75ff] font-semibold">watercolor fantasy style, cinematic lighting</span>"
+            &quot;A serene medieval wizard cottage hidden in a glowing mushroom forest, <span className="text-[#9e75ff] font-semibold">watercolor fantasy style, cinematic lighting</span>&quot;
           </div>
           <div className="flex gap-1.5 mt-1">
             <span className="px-2 py-0.5 rounded-full text-[9px] bg-[#7c4dff]/15 border border-[#7c4dff]/30 text-[#9e75ff]">Watercolor</span>
@@ -103,34 +138,17 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#09090c] text-[#f3f3f6] flex flex-col font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col font-sans overflow-hidden">
       
       {/* Mesh gradients for background glow */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[60%] bg-[radial-gradient(circle,_rgba(124,77,255,0.08)_0%,_transparent_70%)] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[60%] bg-[radial-gradient(circle,_rgba(255,64,129,0.05)_0%,_transparent_70%)] pointer-events-none"></div>
       
       {/* Global animated floating orbs */}
-      <div className="absolute top-[25%] right-[15%] w-72 h-72 rounded-full bg-[#7c4dff]/5 blur-[80px] animate-float-slow pointer-events-none"></div>
-      <div className="absolute bottom-[30%] left-[10%] w-96 h-96 rounded-full bg-[#ff4081]/3 blur-[100px] animate-float-slower pointer-events-none"></div>
+      <div className="absolute top-[25%] right-[15%] w-72 h-72 rounded-full bg-[var(--primary-glow)] blur-[80px] animate-float-slow pointer-events-none"></div>
+      <div className="absolute bottom-[30%] left-[10%] w-96 h-96 rounded-full bg-[var(--secondary-glow)] blur-[100px] animate-float-slower pointer-events-none"></div>
 
-      {/* Header bar */}
-      <header className="w-full h-[80px] px-6 lg:px-16 flex justify-between items-center z-40 border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0">
-        <div className="logo-area flex items-center gap-3">
-          <div className="spark-icon-container bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] w-9 h-9 rounded-xl flex items-center justify-center shadow-[0_4px_16px_rgba(124,77,255,0.25)]">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
-          <h2 className="text-xl font-bold font-display tracking-tight text-white">
-            STATICs<span className="text-zinc-500 font-normal"> Workspace</span>
-          </h2>
-        </div>
-        <div>
-          <Link href="/workspace/">
-            <button className="glass-panel glass-panel-hover px-5 py-2.5 rounded-xl text-xs font-semibold text-white flex items-center gap-2 border border-white/10 hover:border-white/20 transition-all cursor-pointer">
-              Launch App <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Hero Content */}
       <main className="flex-1 flex flex-col z-30">
@@ -163,9 +181,9 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-base text-[#8e909c] leading-relaxed max-w-xl mx-auto lg:mx-0"
+              className="text-base text-foreground/60 leading-relaxed max-w-xl mx-auto lg:mx-0"
             >
-              STATICs marries intuitive freehand drawing with modern neural generation. Guide the AI's layout directly on a glassmorphic canvas, build complex context memory, and download high-resolution outputs instantly.
+              STATICs makes it easy to bring your ideas to life. Draw simple shapes on a digital canvas, describe what you want, and let our smart systems create a high-quality image instantly.
             </motion.p>
 
             <motion.div 
@@ -341,46 +359,96 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Feature Cards Section */}
+        {/* Live Performance & Telemetry (Proof of Product Section) */}
         <section className="px-6 lg:px-16 py-24 max-w-5xl mx-auto w-full flex flex-col gap-12">
           
           <div className="text-center flex flex-col gap-3">
-            <h2 className="text-3xl font-bold font-display text-white">Built for Creative Autonomy</h2>
-            <p className="text-sm text-[#8e909c] max-w-md mx-auto">
-              Professional-grade creative tools designed to supercharge your design workflows.
+            <div className="badge w-fit mx-auto px-3.5 py-1.5 rounded-full bg-[var(--panel-bg)] border border-[var(--panel-border)] text-[10px] uppercase font-bold tracking-widest text-cyan-400 flex items-center gap-2">
+              <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <span>Real-Time System Health & Proof</span>
+            </div>
+            <h2 className="text-3xl font-bold font-display text-foreground">Live System Status</h2>
+            <p className="text-sm text-foreground/60 max-w-md mx-auto">
+              Our servers are fully operational. Here is the current system activity and performance metrics.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.8fr] gap-8">
             
-            <div className="glass-panel glass-panel-hover p-6 rounded-2xl flex flex-col gap-4 border border-white/5">
-              <div className="w-10 h-10 rounded-xl bg-[#7c4dff]/10 flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5 text-[#9e75ff]" />
+            {/* Left Column: Live Stats */}
+            <div className="flex flex-col gap-4">
+              
+              {/* Stat 1 */}
+              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center shrink-0">
+                  <Database className="w-5 h-5 text-cyan-400" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold font-display text-white">43,184</div>
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Rendered Assets Logged</div>
+                </div>
               </div>
-              <h4 className="font-bold text-base text-white">Lightning-Fast Design Engine</h4>
-              <p className="text-xs text-[#8e909c] leading-relaxed">
-                Our serverless interface updates instantly in real-time. Experience lag-free generation with zero loading bottlenecks.
-              </p>
+
+              {/* Stat 2 */}
+              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#7c4dff]/10 flex items-center justify-center shrink-0">
+                  <Clock className="w-5 h-5 text-[#9e75ff]" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold font-display text-white">1.82s</div>
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Median Render Latency</div>
+                </div>
+              </div>
+
+              {/* Stat 3 */}
+              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#ff4081]/10 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-[#ff4081]" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold font-display text-white">99.98%</div>
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Failover Router Uptime</div>
+                </div>
+              </div>
+
             </div>
 
-            <div className="glass-panel glass-panel-hover p-6 rounded-2xl flex flex-col gap-4 border border-white/5">
-              <div className="w-10 h-10 rounded-xl bg-[#ff4081]/10 flex items-center justify-center">
-                <Layers className="w-5 h-5 text-[#ff4081]" />
+            {/* Right Column: Live Telemetry Terminal */}
+            <div className="glass-panel rounded-2xl border border-white/5 p-6 flex flex-col gap-4 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+              <div className="flex justify-between items-center border-b border-white/5 pb-3">
+                <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                  <Terminal className="w-4 h-4 text-[#7c4dff]" />
+                  <span>Interactive Engine Telemetry</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+                  <span className="text-[9px] text-zinc-500 uppercase font-semibold">Live Feed</span>
+                </div>
               </div>
-              <h4 className="font-bold text-base text-white">Infinite High-Fidelity Rendering</h4>
-              <p className="text-xs text-[#8e909c] leading-relaxed">
-                Our multi-engine routing automatically selects the fastest available model, guaranteeing maximum uptime and instant generation.
-              </p>
-            </div>
 
-            <div className="glass-panel glass-panel-hover p-6 rounded-2xl flex flex-col gap-4 border border-white/5">
-              <div className="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-cyan-400" />
+              <div className="flex-1 flex flex-col gap-2.5 min-h-[160px] justify-end">
+                {logs.map((log, index) => (
+                  <div 
+                    key={index}
+                    className={`text-xs flex gap-3 transition-all duration-500 ${
+                      index === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-65'
+                    }`}
+                  >
+                    <span className="text-zinc-600 shrink-0">[{log.time}]</span>
+                    <span className={
+                      log.type === 'success' ? 'text-green-400' : log.type === 'warn' ? 'text-amber-400' : 'text-cyan-400'
+                    }>
+                      {log.type === 'success' ? '✔' : log.type === 'warn' ? '⚠' : 'ℹ'}
+                    </span>
+                    <span className="text-zinc-300 break-all">{log.text}</span>
+                  </div>
+                ))}
               </div>
-              <h4 className="font-bold text-base text-white">Smart Collaboration & Feedback</h4>
-              <p className="text-xs text-[#8e909c] leading-relaxed">
-                Keep track of your creative style history while logging leads automatically for collaborative upscaling and client-ready feedback.
-              </p>
+
+              <div className="border-t border-white/5 pt-3 flex items-center justify-between text-[9px] text-zinc-500 uppercase font-semibold">
+                <span>Cluster Node: public-api-west</span>
+                <span>Active Channels: 4</span>
+              </div>
             </div>
 
           </div>

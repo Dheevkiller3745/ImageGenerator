@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Sparkles, Mail, Lock, User, Chrome, ArrowRight, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/utils/supabaseClient';
+import { Navbar } from '@/components/Navbar';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function LoginPage() {
         if (data.session) {
           // Instantly logged in (e.g. email verification disabled)
           logSessionAPI();
-          window.location.href = '/workspace';
+          router.push('/workspace');
         } else {
           setSuccessMsg("Account created! Please check your email to verify your address.");
         }
@@ -59,8 +60,9 @@ export default function LoginPage() {
         if (error) throw error;
         
         logSessionAPI();
-        window.location.href = '/workspace';
+        router.push('/workspace');
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setErrorMsg(err.message || "An authentication error occurred.");
     } finally {
@@ -92,19 +94,21 @@ export default function LoginPage() {
         },
       });
       if (error) throw error;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to initialize Google login.");
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-[#09090c] text-[#f3f3f6] flex items-center justify-center p-4 font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-background text-foreground flex items-center justify-center p-4 font-sans overflow-hidden transition-colors duration-300">
+      <Navbar />
       {/* Subtle SaaS grid background */}
       <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
-      <div className="w-full max-w-[440px] z-30">
-        {/* Glassmorphic Auth Box */}
-        <div className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_24px_64px_rgba(0,0,0,0.6)] relative overflow-hidden">
+      <div className="w-full max-w-[440px] z-30 mt-16">
+        {/* Glassmorphic/Claymorphic Auth Box */}
+        <div className="clay-panel p-8 sm:p-10 relative overflow-hidden">
           
           {/* Header */}
           <div className="text-center flex flex-col items-center gap-4 mb-8">
@@ -120,21 +124,21 @@ export default function LoginPage() {
           </div>
 
           {/* Toggle Tabs */}
-          <div className="flex bg-white/5 border border-white/5 p-1 rounded-xl mb-6 relative">
+          <div className="flex bg-[var(--panel-bg)] border border-[var(--panel-border)] p-1 rounded-xl mb-6 relative">
             <button
               onClick={() => { setIsSignUp(false); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-black' : 'text-zinc-400'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-foreground' : 'text-foreground/40'}`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsSignUp(true); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${isSignUp ? 'text-black' : 'text-zinc-400'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${isSignUp ? 'text-foreground' : 'text-foreground/40'}`}
             >
               Create Account
             </button>
             <motion.div
-              className="absolute top-1 bottom-1 bg-white rounded-md shadow-sm"
+              className="absolute top-1 bottom-1 bg-[var(--primary-glow)] rounded-md shadow-sm border border-[var(--panel-border)]"
               layout
               initial={false}
               animate={{
@@ -209,7 +213,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black text-xs font-bold py-3.5 rounded-xl mt-2 cursor-pointer flex items-center justify-center gap-2 hover:bg-zinc-200 active:scale-[0.98] disabled:opacity-50 transition-all"
+              className="w-full clay-btn bg-foreground text-background text-xs font-bold py-3.5 mt-2 cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 transition-all"
             >
               <span>{loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}</span>
               <ArrowRight className="w-3.5 h-3.5" />

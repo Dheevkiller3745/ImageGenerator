@@ -13,6 +13,7 @@ export const createClient = (cookieStore: Awaited<ReturnType<typeof cookies>>) =
         getAll() {
           return cookieStore.getAll()
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))

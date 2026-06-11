@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       model: "dall-e-3",
       prompt: prompt,
       n: 1,
-      size: dimensions as any,
+      size: dimensions as '1024x1024' | '1024x1792' | '1792x1024',
       response_format: "b64_json",
     });
 
@@ -70,6 +70,7 @@ export async function POST(req: Request) {
       prompt: prompt,
       shape: size,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("OpenAI Generation Error:", error);
     return NextResponse.json({ detail: error.message || "Failed to generate image via OpenAI" }, { status: 500 });

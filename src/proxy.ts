@@ -16,13 +16,15 @@ export async function proxy(request: NextRequest) {
       getAll() {
         return request.cookies.getAll().map((c) => ({ name: c.name, value: c.value }));
       },
-      setAll(cookiesToSet: any) {
-        cookiesToSet.forEach(({ name, value, options }: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setAll(cookiesToSet: any[]) {
+        cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
         response = NextResponse.next({
           request,
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cookiesToSet.forEach(({ name, value, options }: any) => {
           response.cookies.set(name, value, options);
         });

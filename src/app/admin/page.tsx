@@ -1,13 +1,20 @@
 import React from 'react';
-import Link from 'next/navigation';
 import { createServerClient } from '@/utils/serverSupabaseClient';
 import { 
-  Sparkles, ShieldCheck, ShieldAlert, Image as ImageIcon, 
-  Users, MessageSquare, Landmark, RefreshCw 
+  ShieldAlert, Image as ImageIcon, 
+  Users, MessageSquare, Landmark 
 } from 'lucide-react';
-import SignOutButton from './SignOutButton';
+import { Navbar } from '@/components/Navbar';
 
 export const dynamic = 'force-dynamic';
+
+const getPast24HoursISO = (): string => {
+  return new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+};
+
+const getPast7DaysISO = (): string => {
+  return new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+};
 
 export default async function AdminDashboardPage() {
   const supabase = await createServerClient();
@@ -38,7 +45,7 @@ export default async function AdminDashboardPage() {
     .select('*', { count: 'exact', head: true });
 
   // Get active sessions inside 24 hours
-  const past24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const past24Hours = getPast24HoursISO();
   const { count: activeSessionsToday } = await supabase
     .from('user_sessions')
     .select('*', { count: 'exact', head: true })
@@ -69,7 +76,7 @@ export default async function AdminDashboardPage() {
     .limit(20);
 
   // Active Sessions (last 7 days)
-  const past7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const past7Days = getPast7DaysISO();
   const { data: sessions } = await supabase
     .from('user_sessions')
     .select(`
@@ -86,30 +93,15 @@ export default async function AdminDashboardPage() {
     .limit(20);
 
   return (
-    <div className="relative min-h-screen bg-[#09090c] text-[#f3f3f6] flex flex-col font-sans overflow-y-auto">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col font-sans overflow-y-auto transition-colors duration-300">
       {/* Background orbs */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle,_rgba(124,77,255,0.06)_0%,_transparent_70%)] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle,_rgba(255,64,129,0.03)_0%,_transparent_70%)] pointer-events-none"></div>
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle,var(--primary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
 
-      {/* Header bar */}
-      <header className="w-full h-[70px] px-6 lg:px-12 flex justify-between items-center z-40 border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0">
-        <div className="logo-area flex items-center gap-3">
-          <div className="spark-icon-container bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] w-8 h-8 rounded-lg flex items-center justify-center shadow-[0_4px_12px_rgba(124,77,255,0.25)]">
-            <Sparkles className="w-4.5 h-4.5 text-white" />
-          </div>
-          <h2 className="text-lg font-bold font-display tracking-tight text-white flex items-center gap-2">
-            Aether<span className="text-[#7c4dff] font-normal">Image</span>
-            <span className="text-[10px] font-bold px-2 py-0.5 bg-[#7c4dff]/15 border border-[#7c4dff]/30 text-[#9e75ff] rounded-md uppercase tracking-wider">Admin</span>
-          </h2>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-white/50 hidden sm:inline">{user.email}</span>
-          <SignOutButton />
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main content grid */}
-      <main className="flex-1 p-6 lg:p-12 max-w-7xl mx-auto w-full flex flex-col gap-8 z-30">
+      <main className="flex-1 p-6 lg:p-12 max-w-7xl mx-auto w-full flex flex-col gap-8 z-30 mt-[80px]">
         
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -172,6 +164,7 @@ export default async function AdminDashboardPage() {
                 </thead>
                 <tbody className="text-xs">
                   {generations && generations.length > 0 ? (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     generations.map((gen: any) => (
                       <tr key={gen.id} className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors text-white/80">
                         <td className="py-3 px-3 max-w-[200px] truncate" title={gen.prompt}>{gen.prompt}</td>
@@ -209,6 +202,7 @@ export default async function AdminDashboardPage() {
                 </thead>
                 <tbody className="text-xs text-white/80">
                   {leads && leads.length > 0 ? (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     leads.map((l: any) => (
                       <tr key={l.id} className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors">
                         <td className="py-3 px-3 font-semibold text-white">{l.name}</td>
@@ -246,6 +240,7 @@ export default async function AdminDashboardPage() {
                 </thead>
                 <tbody className="text-xs text-white/80">
                   {sessions && sessions.length > 0 ? (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     sessions.map((s: any) => (
                       <tr key={s.id} className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors">
                         <td className="py-3 px-3 font-semibold text-white">{s.profiles?.email || 'Unknown'}</td>
@@ -272,11 +267,11 @@ export default async function AdminDashboardPage() {
 
 function renderAccessDenied(message: string) {
   return (
-    <div className="relative min-h-screen bg-[#09090c] text-[#f3f3f6] flex items-center justify-center p-6 font-sans">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[radial-gradient(circle,_rgba(255,64,129,0.08)_0%,_transparent_70%)] pointer-events-none"></div>
+    <div className="relative min-h-screen bg-background text-foreground flex items-center justify-center p-6 font-sans">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
       
       <div className="w-full max-w-[440px] z-30 text-center">
-        <div className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_24px_64px_rgba(0,0,0,0.6)] flex flex-col items-center gap-5">
+        <div className="clay-panel p-8 sm:p-10 flex flex-col items-center gap-5">
           <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
             <ShieldAlert className="w-6 h-6 text-red-500" />
           </div>

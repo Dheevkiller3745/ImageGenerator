@@ -35,19 +35,14 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
   const [isPanning, setIsPanning] = useState(false);
   const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
   const [cropBox, setCropBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 768, height: 768 });
 
-  const [brushSize, setBrushSize] = useState(canvasConfig.brushSize);
-  const [brushColor, setBrushColor] = useState(canvasConfig.brushColor);
+  const brushSize = canvasConfig.brushSize;
+  const brushColor = canvasConfig.brushColor;
 
   const currentFilter = canvasConfig.currentFilter;
   const activePrompt = useWorkspaceStore((state) => state.activePrompt);
   const activeSeed = useWorkspaceStore((state) => state.seed);
-
-  // Sync brush state from store
-  useEffect(() => {
-    setBrushSize(canvasConfig.brushSize);
-    setBrushColor(canvasConfig.brushColor);
-  }, [canvasConfig.brushSize, canvasConfig.brushColor]);
 
   // Load and draw image
   useEffect(() => {
@@ -68,6 +63,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
     img.onload = () => {
       canvas.width = img.width;
       canvas.height = img.height;
+      setCanvasDimensions({ width: img.width, height: img.height });
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
 
@@ -77,7 +73,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
       }
     };
     img.src = sourceUrl;
-  }, [imageDataUrl, editedDataUrl]);
+  }, [imageDataUrl, editedDataUrl, undoStack.length, setUndoStack]);
 
   // Handle Zoom on Wheel
   const handleWheel = (e: React.WheelEvent) => {
@@ -197,6 +193,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
     tempImg.onload = () => {
       canvas.width = w;
       canvas.height = h;
+      setCanvasDimensions({ width: w, height: h });
       ctx.clearRect(0, 0, w, h);
       ctx.drawImage(tempImg, x, y, w, h, 0, 0, w, h);
 
@@ -261,6 +258,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
     img.onload = () => {
       canvas.width = img.width;
       canvas.height = img.height;
+      setCanvasDimensions({ width: img.width, height: img.height });
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       setUndoStack(newStack);
@@ -320,7 +318,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
           <div className="canvas-inner-container flex flex-col border border-white/5 rounded-2xl bg-[#0c0c10]/40 backdrop-blur-md overflow-hidden max-h-full">
             <div className="canvas-container-header bg-black/20 px-4 py-2.5 flex justify-between items-center border-b border-white/5">
               <span className="canvas-meta text-[11px] text-[#8e909c]">
-                Resolution: {canvasRef.current?.width || 768} x {canvasRef.current?.height || 768}px | Active Tool: {activeTool.toUpperCase()}
+                Resolution: {canvasDimensions.width} x {canvasDimensions.height}px | Active Tool: {activeTool.toUpperCase()}
               </span>
             </div>
             
@@ -348,8 +346,8 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
                 <div 
                   className="absolute border-2 border-dashed border-[#ff4081] pointer-events-none bg-black/20"
                   style={{
-                    left: `calc(50% + ${panX}px + ${(cropBox.w < 0 ? cropBox.x + cropBox.w : cropBox.x) * zoom - (canvasRef.current?.width || 768) / 2 * zoom}px)`,
-                    top: `calc(50% + ${panY}px + ${(cropBox.h < 0 ? cropBox.y + cropBox.h : cropBox.y) * zoom - (canvasRef.current?.height || 768) / 2 * zoom}px)`,
+                    left: `calc(50% + ${panX}px + ${(cropBox.w < 0 ? cropBox.x + cropBox.w : cropBox.x) * zoom - canvasDimensions.width / 2 * zoom}px)`,
+                    top: `calc(50% + ${panY}px + ${(cropBox.h < 0 ? cropBox.y + cropBox.h : cropBox.y) * zoom - canvasDimensions.height / 2 * zoom}px)`,
                     width: `${Math.abs(cropBox.w) * zoom}px`,
                     height: `${Math.abs(cropBox.h) * zoom}px`,
                   }}
@@ -453,17 +451,17 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
             <span className="tool-title text-[10px] uppercase font-bold text-[#8e909c]">Filters</span>
             <div className="filters-grid grid grid-cols-2 gap-1.5">
               {[
-                { name: 'Normal', value: 'none' },
-                { name: 'Grayscale', value: 'grayscale' },
-                { name: 'Sepia', value: 'sepia' },
-                { name: 'Vintage', value: 'vintage' },
-                { name: 'Saturate', value: 'saturation' },
-                { name: 'Blur', value: 'blur' },
-                { name: 'Contrast', value: 'contrast' }
+                { name: 'Normal', value: 'none' as const },
+                { name: 'Grayscale', value: 'grayscale' as const },
+                { name: 'Sepia', value: 'sepia' as const },
+                { name: 'Vintage', value: 'vintage' as const },
+                { name: 'Saturate', value: 'saturation' as const },
+                { name: 'Blur', value: 'blur' as const },
+                { name: 'Contrast', value: 'contrast' as const }
               ].map((f, i) => (
                 <button 
                   key={i}
-                  onClick={() => updateCanvasConfig({ currentFilter: f.value as any })}
+                  onClick={() => updateCanvasConfig({ currentFilter: f.value })}
                   className={`filter-btn p-1.5 text-[10px] font-semibold border rounded-md transition-all ${
                     currentFilter === f.value ? 'bg-[#7c4dff]/10 border-[#7c4dff] text-[#9e75ff]' : 'bg-white/[0.02] border-white/5 text-[#8e909c] hover:bg-white/[0.06]'
                   }`}

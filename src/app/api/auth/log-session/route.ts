@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ status: "success" });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("Session logger endpoint exception:", err);
     return NextResponse.json({ detail: err.message }, { status: 500 });
