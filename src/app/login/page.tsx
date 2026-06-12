@@ -21,6 +21,23 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Auto-redirect if user has an active session
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        router.push('/workspace');
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        router.push('/workspace');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
   // Form validator
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();

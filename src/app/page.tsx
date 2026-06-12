@@ -5,9 +5,23 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, ArrowRight, Paintbrush, Layers, MessageSquare, ShieldCheck, Heart, Activity, Terminal, Database, Clock } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
+import { supabase } from '@/utils/supabaseClient';
 
 export default function LandingPage() {
   const [activeStep, setActiveStep] = useState(0);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Simulated Live System Log Feed for Product Verification
   const [logs, setLogs] = useState<Array<{ time: string; text: string; type: 'success' | 'info' | 'warn' }>>([
@@ -194,7 +208,7 @@ export default function LandingPage() {
             >
               <Link href="/workspace/">
                 <button className="bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] border-none text-white text-sm font-bold py-3.5 px-8 rounded-xl cursor-pointer flex items-center justify-center gap-2.5 shadow-[0_4px_16px_rgba(124,77,255,0.35)] hover:shadow-[0_8px_24px_rgba(124,77,255,0.45)] hover:scale-[1.01] active:scale-100 transition-all w-full sm:w-auto">
-                  <span>Enter the Workspace</span>
+                  <span>{user ? 'Open Workspace' : 'Enter the Workspace'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>

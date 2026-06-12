@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sparkles, Sun, Moon, User as UserIcon, LogOut, LayoutDashboard, Settings } from 'lucide-react';
+import { Sparkles, Sun, Moon, User as UserIcon, LogOut, LayoutDashboard, Settings, Sliders } from 'lucide-react';
 import { supabase } from '@/utils/supabaseClient';
 import { User } from '@supabase/supabase-js';
 
@@ -82,6 +82,12 @@ export function Navbar() {
                 <Link href="/workspace" onClick={() => setDropdownOpen(false)}>
                   <div className="px-4 py-2 text-sm text-foreground hover:bg-[var(--primary-glow)] flex items-center gap-2 cursor-pointer transition-colors">
                     <LayoutDashboard className="w-4 h-4" /> Workspace
+                  </div>
+                </Link>
+
+                <Link href="/personalization" onClick={() => setDropdownOpen(false)}>
+                  <div className="px-4 py-2 text-sm text-foreground hover:bg-[var(--primary-glow)] flex items-center gap-2 cursor-pointer transition-colors">
+                    <Sliders className="w-4 h-4" /> Personalisation
                   </div>
                 </Link>
 

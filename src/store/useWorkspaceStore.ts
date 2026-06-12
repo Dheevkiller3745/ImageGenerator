@@ -25,6 +25,11 @@ interface WorkspaceState {
     brushSize: number;
     currentFilter: 'none' | 'grayscale' | 'sepia' | 'vintage' | 'saturation' | 'blur' | 'contrast';
   };
+  // Personalisation states
+  highContrast: boolean;
+  fontSizeMultiplier: 'small' | 'normal' | 'large' | 'huge';
+  dyslexicFriendlyFont: boolean;
+
   setEngine: (engine: 'puter' | 'pollinations' | 'perchance' | 'openai') => void;
   setPrompt: (prompt: string) => void;
   setNegativePrompt: (negativePrompt: string) => void;
@@ -37,6 +42,11 @@ interface WorkspaceState {
   addToHistory: (item: HistoryItem) => void;
   clearHistory: () => void;
   updateCanvasConfig: (config: Partial<WorkspaceState['canvasConfig']>) => void;
+  
+  // Personalisation actions
+  setHighContrast: (contrast: boolean) => void;
+  setFontSizeMultiplier: (size: 'small' | 'normal' | 'large' | 'huge') => void;
+  setDyslexicFriendlyFont: (dyslexic: boolean) => void;
 }
 
 export const useWorkspaceStore = create<WorkspaceState>()(
@@ -55,6 +65,11 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         brushSize: 8,
         currentFilter: 'none',
       },
+      // Personalisation defaults
+      highContrast: false,
+      fontSizeMultiplier: 'normal',
+      dyslexicFriendlyFont: false,
+
       setEngine: (engine) => set({ currentEngine: engine }),
       setPrompt: (prompt) => set({ activePrompt: prompt }),
       setNegativePrompt: (negativePrompt) => set({ negativePrompt }),
@@ -73,6 +88,9 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       updateCanvasConfig: (config) => set((state) => ({
         canvasConfig: { ...state.canvasConfig, ...config }
       })),
+      setHighContrast: (contrast) => set({ highContrast: contrast }),
+      setFontSizeMultiplier: (size) => set({ fontSizeMultiplier: size }),
+      setDyslexicFriendlyFont: (dyslexic) => set({ dyslexicFriendlyFont: dyslexic }),
     }),
     { name: 'aetherimage-workspace-storage' }
   )

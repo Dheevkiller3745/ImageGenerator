@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PersonalizationProvider } from "@/components/PersonalizationProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,7 +41,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <PersonalizationProvider>
+            {children}
+          </PersonalizationProvider>
         </ThemeProvider>
       </body>
     </html>

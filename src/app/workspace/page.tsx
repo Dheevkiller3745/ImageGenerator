@@ -11,17 +11,44 @@ import {
   Shuffle, Menu, X, Send, Info, MessageSquareCode
 } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 export default function WorkspacePage() {
+  const router = useRouter();
   const store = useWorkspaceStore();
 
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [activeTool, setActiveTool] = useState<'view' | 'draw' | 'crop'>('view');
   
-  // Local state for image URLs (since base64 dataUrls can be large, we sync them from the store history or active item)
+  // Auth validation state
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Local state for image URLs
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [editedImage, setEditedImage] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Auth checker
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.push('/login');
+      } else {
+        setAuthLoading(false);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        router.push('/login');
+      } else {
+        setAuthLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
 
   // Sidebar toggles
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -154,6 +181,18 @@ export default function WorkspacePage() {
       setLeadSubmitting(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center font-sans">
+        <div className="clay-panel p-8 text-center flex flex-col items-center gap-4 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-[radial-gradient(circle,var(--primary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+          <div className="w-10 h-10 border-t-2 border-r-2 border-[#7c4dff] rounded-full animate-spin"></div>
+          <p className="text-xs text-[#8e909c] font-mono tracking-widest uppercase">Validating Workspace Access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container flex flex-col lg:grid lg:grid-cols-[320px_1fr] h-screen w-screen overflow-hidden bg-background text-foreground relative transition-colors duration-300 pt-[80px]">
