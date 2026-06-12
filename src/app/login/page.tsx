@@ -124,21 +124,21 @@ export default function LoginPage() {
           </div>
 
           {/* Toggle Tabs */}
-          <div className="flex bg-[var(--panel-bg)] border border-[var(--panel-border)] p-1 rounded-xl mb-6 relative">
+          <div className="flex bg-[#121216] border border-white/5 p-1 rounded-xl mb-6 relative shadow-inner">
             <button
               onClick={() => { setIsSignUp(false); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-foreground' : 'text-foreground/40'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${!isSignUp ? 'text-white' : 'text-white/40'}`}
             >
               Sign In
             </button>
             <button
               onClick={() => { setIsSignUp(true); setErrorMsg(null); setSuccessMsg(null); }}
-              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${isSignUp ? 'text-foreground' : 'text-foreground/40'}`}
+              className={`flex-1 py-2.5 text-xs font-semibold rounded-md transition-colors z-10 cursor-pointer ${isSignUp ? 'text-white' : 'text-white/40'}`}
             >
               Create Account
             </button>
             <motion.div
-              className="absolute top-1 bottom-1 bg-[var(--primary-glow)] rounded-md shadow-sm border border-[var(--panel-border)]"
+              className="absolute top-1 bottom-1 bg-gradient-to-r from-[#7c4dff] to-[#ff4081] rounded-md shadow-[0_2px_10px_rgba(124,77,255,0.35)] border border-white/10"
               layout
               initial={false}
               animate={{
@@ -174,7 +174,7 @@ export default function LoginPage() {
                     placeholder="Enter your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/5 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 focus:border-[#7c4dff] focus:bg-white/[0.07] focus:outline-none transition-all"
+                    className="w-full clay-input pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 transition-all"
                   />
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default function LoginPage() {
                   placeholder="name@agency.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 focus:border-[#7c4dff] focus:bg-white/[0.07] focus:outline-none transition-all"
+                  className="w-full clay-input pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 transition-all"
                 />
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/5 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 focus:border-[#7c4dff] focus:bg-white/[0.07] focus:outline-none transition-all"
+                  className="w-full clay-input pl-10 pr-4 py-3 text-xs text-white placeholder-white/20 transition-all"
                 />
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full clay-btn bg-foreground text-background text-xs font-bold py-3.5 mt-2 cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] disabled:opacity-50 transition-all"
+              className="w-full clay-panel clay-panel-hover bg-gradient-to-r from-[#7c4dff] to-[#ff4081] border border-white/10 text-white text-xs font-bold py-3.5 mt-2 cursor-pointer flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(124,77,255,0.25)] active:scale-[0.98] disabled:opacity-50 transition-all"
             >
               <span>{loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
