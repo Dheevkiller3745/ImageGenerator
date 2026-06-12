@@ -21,7 +21,7 @@ export default function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="glass-panel glass-panel-hover flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-white/70 hover:text-white transition-all cursor-pointer border border-white/5"
+      className="clay-panel clay-panel-hover flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-white/70 hover:text-white transition-all cursor-pointer border border-white/5"
     >
       <LogOut className="w-3.5 h-3.5" />
       <span>Sign Out</span>

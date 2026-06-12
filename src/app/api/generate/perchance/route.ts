@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/utils/serverSupabaseClient';
 import { supabaseAdmin } from '@/utils/supabaseClient';
 
-function generateLocalGlassmorphicSvg(prompt: string, shape: string, seed: number): { imageUrl: string; w: number; h: number } {
+function generateLocalClaymorphicSvg(prompt: string, shape: string, seed: number): { imageUrl: string; w: number; h: number } {
   // Simple deterministic pseudorandom selection based on seed
   const width = shape === 'portrait' ? 512 : 768;
   const height = shape === 'landscape' ? 512 : 768;
@@ -40,12 +40,30 @@ function generateLocalGlassmorphicSvg(prompt: string, shape: string, seed: numbe
     <filter id="glow-blur">
       <feGaussianBlur stdDeviation="70" />
     </filter>
+    
+    <filter id="clay-card">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.4" />
+      <feOffset dx="6" dy="6" in="SourceAlpha" result="offset1"/>
+      <feGaussianBlur stdDeviation="10" in="offset1" result="blur1"/>
+      <feFlood flood-color="#050508" flood-opacity="0.75" result="flood1"/>
+      <feComposite operator="in" in="flood1" in2="blur1" result="shadow1"/>
+      
+      <feOffset dx="-6" dy="-6" in="SourceAlpha" result="offset2"/>
+      <feGaussianBlur stdDeviation="10" in="offset2" result="blur2"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.15" result="flood2"/>
+      <feComposite operator="in" in="flood2" in2="blur2" result="shadow2"/>
+      <feMerge>
+        <feMergeNode in="shadow1"/>
+        <feMergeNode in="shadow2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
   <rect width="100%" height="100%" fill="url(#bg-grad)" />
   ${circles.join('\n  ')}
   
-  <rect x="${width * 0.1}" y="${height * 0.1}" width="${width * 0.8}" height="${height * 0.8}" rx="24" fill="rgba(255, 255, 255, 0.01)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+  <rect x="${width * 0.1}" y="${height * 0.1}" width="${width * 0.8}" height="${height * 0.8}" rx="28" fill="#121216" filter="url(#clay-card)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="2" />
   <text x="${width * 0.15}" y="${height * 0.85}" fill="rgba(255, 255, 255, 0.18)" font-family="monospace" font-size="10" letter-spacing="1">AETHER SEED: ${seed}</text>
   <text x="${width * 0.15}" y="${height * 0.82}" fill="rgba(124, 77, 255, 0.4)" font-family="sans-serif" font-weight="bold" font-size="12" letter-spacing="2">STATICs AI SYNTHESIS (FALLBACK)</text>
 </svg>`;
@@ -133,8 +151,8 @@ export async function POST(req: Request) {
       });
 
     } catch (apiErr) {
-      console.warn("Pollinations call failed, using glassmorphic fallback:", apiErr);
-      const fallback = generateLocalGlassmorphicSvg(prompt, shape || 'square', generatedSeed);
+      console.warn("Pollinations call failed, using claymorphic fallback:", apiErr);
+      const fallback = generateLocalClaymorphicSvg(prompt, shape || 'square', generatedSeed);
 
       // Write generation log for fallback too
       try {

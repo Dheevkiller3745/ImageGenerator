@@ -46,72 +46,70 @@ body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism System */
-.glass-panel {
-  background: var(--panel-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--panel-border);
-}
-
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-panel-hover:hover {
-  background: var(--panel-bg);
-  border-color: rgba(124, 77, 255, 0.3);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2), 0 0 20px var(--primary-glow);
-  transform: translateY(-2px);
-}
-
-.glass-panel-heavy {
-  background: var(--panel-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--panel-border);
-}
-
-.glass-card-neon {
-  background: var(--primary-glow);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(124, 77, 255, 0.15);
-}
-
-.glass-input {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  backdrop-filter: blur(8px);
-  transition: all 0.25s ease;
-}
-
-.glass-input:focus {
-  background: var(--panel-bg);
-  border-color: rgba(124, 77, 255, 0.4);
-  box-shadow: 0 0 16px var(--primary-glow);
-  outline: none;
-}
-
 /* Claymorphism System */
 .clay-panel {
   background: var(--clay-bg);
+  border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 24px;
   box-shadow: inset 6px 6px 12px var(--clay-shadow-1),
               inset -6px -6px 12px var(--clay-shadow-2),
-              6px 6px 16px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+              6px 6px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.clay-panel:hover {
+.clay-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clay-panel-hover:hover {
+  background: var(--clay-bg);
+  border-color: rgba(124, 77, 255, 0.25);
   box-shadow: inset 4px 4px 8px var(--clay-shadow-1),
               inset -4px -4px 8px var(--clay-shadow-2),
-              8px 8px 24px rgba(0,0,0,0.15);
+              8px 8px 24px rgba(0, 0, 0, 0.2),
+              0 0 20px var(--primary-glow);
   transform: translateY(-2px);
+}
+
+.clay-panel-heavy {
+  background: var(--clay-bg);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 24px;
+  box-shadow: inset 8px 8px 16px var(--clay-shadow-1),
+              inset -8px -8px 16px var(--clay-shadow-2),
+              12px 12px 36px rgba(0, 0, 0, 0.25);
+}
+
+.clay-card-neon {
+  background: var(--clay-bg);
+  border: 1px solid rgba(124, 77, 255, 0.18);
+  border-radius: 24px;
+  box-shadow: inset 6px 6px 12px var(--clay-shadow-1),
+              inset -6px -6px 12px var(--clay-shadow-2),
+              0 0 24px rgba(124, 77, 255, 0.15);
+}
+
+.clay-input {
+  background: var(--clay-bg);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  box-shadow: inset 3px 3px 6px var(--clay-shadow-2),
+              inset -3px -3px 6px var(--clay-shadow-1);
+  transition: all 0.25s ease;
+}
+
+.clay-input:focus {
+  background: var(--clay-bg);
+  border-color: rgba(124, 77, 255, 0.35);
+  box-shadow: inset 2px 2px 4px var(--clay-shadow-2),
+              inset -2px -2px 4px var(--clay-shadow-1),
+              0 0 16px var(--primary-glow);
+  outline: none;
 }
 
 .clay-btn {
   background: var(--clay-bg);
+  border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 12px;
   box-shadow: inset 4px 4px 8px var(--clay-shadow-1),
               inset -4px -4px 8px var(--clay-shadow-2);

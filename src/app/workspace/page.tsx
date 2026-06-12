@@ -163,7 +163,7 @@ export default function WorkspacePage() {
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none z-10"></div>
       
       {/* Sidebar Controls */}
-      <aside className={`app-sidebar glass-panel-heavy border-r border-[var(--panel-border)] flex flex-col h-full z-40 transition-all duration-300 fixed lg:relative left-0 top-[80px] bottom-0 w-[320px] lg:translate-x-0 ${
+      <aside className={`app-sidebar clay-panel-heavy border-r border-[var(--panel-border)] flex flex-col h-full z-40 transition-all duration-300 fixed lg:relative left-0 top-[80px] bottom-0 w-[320px] lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0 shadow-[12px_0_36px_rgba(0,0,0,0.6)]' : '-translate-x-full'
       }`}>
         <div className="sidebar-header p-6 flex justify-between items-center lg:hidden">
@@ -221,7 +221,7 @@ export default function WorkspacePage() {
             <select 
               value={store.currentEngine}
               onChange={(e) => store.setEngine(e.target.value as 'puter' | 'pollinations' | 'perchance' | 'openai')}
-              className="w-full glass-input rounded-xl p-3 outline-none text-xs cursor-pointer text-white"
+              className="w-full clay-input rounded-xl p-3 outline-none text-xs cursor-pointer text-white"
             >
               <option value="puter" className="bg-[#09090c]">Puter AI (Fast, Free & Stable)</option>
               <option value="pollinations" className="bg-[#09090c]">Pollinations AI (No-key & Rapid)</option>
@@ -303,7 +303,7 @@ export default function WorkspacePage() {
                       value={store.seed}
                       onChange={(e) => store.setSeed(parseInt(e.target.value) || -1)}
                       placeholder="Random (-1)"
-                      className="flex-1 glass-input rounded-xl p-2.5 text-xs text-foreground outline-none"
+                      className="flex-1 clay-input rounded-xl p-2.5 text-xs text-foreground outline-none"
                     />
                     <button 
                       onClick={() => store.setSeed(-1)}
@@ -321,7 +321,7 @@ export default function WorkspacePage() {
                     value={store.negativePrompt}
                     onChange={(e) => store.setNegativePrompt(e.target.value)}
                     placeholder="Things to avoid (e.g. blurry, low quality)"
-                    className="w-full h-20 glass-input rounded-xl p-2.5 text-xs text-foreground outline-none resize-none"
+                    className="w-full h-20 clay-input rounded-xl p-2.5 text-xs text-foreground outline-none resize-none"
                   />
                 </div>
               </div>
@@ -333,7 +333,7 @@ export default function WorkspacePage() {
             <h3 className="section-title text-[11px] uppercase tracking-wider text-[#8e909c] flex items-center gap-2 font-bold mb-3">
               <MessageSquareCode className="w-3.5 h-3.5 text-[#ff4081]" /> Refine with Designer
             </h3>
-            <form onSubmit={triggerWhatsAppRedirect} className="flex flex-col gap-3 glass-panel rounded-2xl p-4">
+            <form onSubmit={triggerWhatsAppRedirect} className="flex flex-col gap-3 clay-panel rounded-2xl p-4">
               <p className="text-[10px] text-[#8e909c] leading-relaxed">
                 Connect with our expert design agency on WhatsApp to tweak, upscale, or vectorise your generated layout.
               </p>
@@ -343,7 +343,7 @@ export default function WorkspacePage() {
                 value={leadName}
                 onChange={(e) => setLeadName(e.target.value)}
                 required
-                className="glass-input rounded-xl p-2.5 text-xs text-white"
+                className="clay-input rounded-xl p-2.5 text-xs text-white"
               />
               <input 
                 type="email"
@@ -351,7 +351,7 @@ export default function WorkspacePage() {
                 value={leadEmail}
                 onChange={(e) => setLeadEmail(e.target.value)}
                 required
-                className="glass-input rounded-xl p-2.5 text-xs text-white"
+                className="clay-input rounded-xl p-2.5 text-xs text-white"
               />
               <button 
                 type="submit"

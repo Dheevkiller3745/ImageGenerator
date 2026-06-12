@@ -199,7 +199,7 @@ export default function LandingPage() {
                 </button>
               </Link>
               <a href="#story-section" className="w-full sm:w-auto">
-                <button className="glass-panel glass-panel-hover text-white text-sm font-bold py-3.5 px-8 rounded-xl cursor-pointer border border-white/5 hover:border-white/15 transition-all w-full">
+                <button className="clay-panel clay-panel-hover text-white text-sm font-bold py-3.5 px-8 rounded-xl cursor-pointer border border-white/5 hover:border-white/15 transition-all w-full">
                   Explore The Story
                 </button>
               </a>
@@ -213,7 +213,7 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="hero-mockup w-full flex justify-center"
           >
-            <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-3xl glass-panel p-4 shadow-[0_24px_64px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col justify-between">
+            <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-3xl clay-panel p-4 shadow-[0_24px_64px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col justify-between">
               
               {/* Header inside card mockup */}
               <div className="flex justify-between items-center border-b border-white/5 pb-3">
@@ -264,7 +264,7 @@ export default function LandingPage() {
 
                 {/* Processing Overlay message */}
                 <motion.div 
-                  className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl glass-panel border border-[#7c4dff]/20 text-[9px] font-mono font-bold tracking-widest text-[#9e75ff] uppercase flex items-center gap-2"
+                  className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl clay-panel border border-[#7c4dff]/20 text-[9px] font-mono font-bold tracking-widest text-[#9e75ff] uppercase flex items-center gap-2"
                   animate={{ 
                     y: [10, 0, 0, 10],
                     opacity: [0, 1, 1, 0] 
@@ -311,7 +311,7 @@ export default function LandingPage() {
                     onClick={() => setActiveStep(idx)}
                     className={`p-6 rounded-2xl border cursor-pointer text-left transition-all duration-300 ${
                       activeStep === idx 
-                        ? 'glass-card-neon bg-[#7c4dff]/5 border-[#7c4dff]/20 translate-x-2' 
+                        ? 'clay-card-neon bg-[#7c4dff]/5 border-[#7c4dff]/20 translate-x-2' 
                         : 'bg-white/[0.01] border-transparent hover:bg-white/[0.03] text-[#8e909c]'
                     }`}
                   >
@@ -332,7 +332,7 @@ export default function LandingPage() {
 
               {/* Right Side: Step Preview Screen */}
               <div className="preview-screen-wrapper">
-                <div className="glass-panel rounded-3xl p-6 border border-white/5 shadow-[0_16px_36px_rgba(0,0,0,0.5)]">
+                <div className="clay-panel rounded-3xl p-6 border border-white/5 shadow-[0_16px_36px_rgba(0,0,0,0.5)]">
                   <div className="preview-screen bg-black/50 aspect-video rounded-xl border border-white/5 flex items-center justify-center p-4">
                     <AnimatePresence mode="wait">
                       <motion.div 
@@ -379,7 +379,7 @@ export default function LandingPage() {
             <div className="flex flex-col gap-4">
               
               {/* Stat 1 */}
-              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="clay-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center shrink-0">
                   <Database className="w-5 h-5 text-cyan-400" />
                 </div>
@@ -390,7 +390,7 @@ export default function LandingPage() {
               </div>
 
               {/* Stat 2 */}
-              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="clay-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-[#7c4dff]/10 flex items-center justify-center shrink-0">
                   <Clock className="w-5 h-5 text-[#9e75ff]" />
                 </div>
@@ -401,7 +401,7 @@ export default function LandingPage() {
               </div>
 
               {/* Stat 3 */}
-              <div className="glass-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+              <div className="clay-panel p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-[#ff4081]/10 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-5 h-5 text-[#ff4081]" />
                 </div>
@@ -414,7 +414,7 @@ export default function LandingPage() {
             </div>
 
             {/* Right Column: Live Telemetry Terminal */}
-            <div className="glass-panel rounded-2xl border border-white/5 p-6 flex flex-col gap-4 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+            <div className="clay-panel rounded-2xl border border-white/5 p-6 flex flex-col gap-4 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
               <div className="flex justify-between items-center border-b border-white/5 pb-3">
                 <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
                   <Terminal className="w-4 h-4 text-[#7c4dff]" />
@@ -457,7 +457,7 @@ export default function LandingPage() {
 
         {/* CTA section */}
         <section className="px-6 lg:px-16 pb-32 max-w-5xl mx-auto w-full">
-          <div className="relative glass-card-neon rounded-3xl p-12 overflow-hidden text-center flex flex-col items-center gap-6 border border-[#7c4dff]/15">
+          <div className="relative clay-card-neon rounded-3xl p-12 overflow-hidden text-center flex flex-col items-center gap-6 border border-[#7c4dff]/15">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#7c4dff]/5 blur-[70px] pointer-events-none"></div>
             
             <Sparkles className="w-10 h-10 text-[#7c4dff] animate-pulse" />

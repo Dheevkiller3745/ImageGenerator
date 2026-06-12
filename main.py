@@ -21,7 +21,7 @@ class GenerateRequest(BaseModel):
     guidance_scale: float = 7.0
     session_key: str | None = None
 
-def generate_local_glassmorphic_svg(prompt: str, shape: str, seed: int) -> tuple[str, int, int]:
+def generate_local_claymorphic_svg(prompt: str, shape: str, seed: int) -> tuple[str, int, int]:
     # Use seed to seed random generator
     import random as r
     r.seed(seed)
@@ -34,7 +34,7 @@ def generate_local_glassmorphic_svg(prompt: str, shape: str, seed: int) -> tuple
     }
     width, height = resolution_map.get(shape, (768, 768))
     
-    # Premium glassmorphic color palettes
+    # Premium claymorphic color palettes
     palettes = [
         ["#7c4dff", "#ff4081", "#00bcd4"], # Deep Purple, Hot Pink, Cyan
         ["#ff9800", "#ff4081", "#9c27b0"], # Amber, Hot Pink, Royal Purple
@@ -72,6 +72,24 @@ def generate_local_glassmorphic_svg(prompt: str, shape: str, seed: int) -> tuple
     <filter id="glow-blur">
       <feGaussianBlur stdDeviation="70" />
     </filter>
+    
+    <filter id="clay-card">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.4" />
+      <feOffset dx="6" dy="6" in="SourceAlpha" result="offset1"/>
+      <feGaussianBlur stdDeviation="10" in="offset1" result="blur1"/>
+      <feFlood flood-color="#050508" flood-opacity="0.75" result="flood1"/>
+      <feComposite operator="in" in="flood1" in2="blur1" result="shadow1"/>
+      
+      <feOffset dx="-6" dy="-6" in="SourceAlpha" result="offset2"/>
+      <feGaussianBlur stdDeviation="10" in="offset2" result="blur2"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.15" result="flood2"/>
+      <feComposite operator="in" in="flood2" in2="blur2" result="shadow2"/>
+      <feMerge>
+        <feMergeNode in="shadow1"/>
+        <feMergeNode in="shadow2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
   <!-- Deep Dark Background -->
@@ -80,8 +98,8 @@ def generate_local_glassmorphic_svg(prompt: str, shape: str, seed: int) -> tuple
   <!-- Ambient Glow Blobs -->
   {circles_str}
   
-  <!-- Glassmorphic Card Frame -->
-  <rect x="{width * 0.1}" y="{height * 0.1}" width="{width * 0.8}" height="{height * 0.8}" rx="24" fill="rgba(255, 255, 255, 0.01)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+  <!-- Claymorphic Card Frame -->
+  <rect x="{width * 0.1}" y="{height * 0.1}" width="{width * 0.8}" height="{height * 0.8}" rx="28" fill="#121216" filter="url(#clay-card)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="2" />
   
   <!-- Subtle Metadata Text -->
   <text x="{width * 0.15}" y="{height * 0.85}" fill="rgba(255, 255, 255, 0.18)" font-family="monospace" font-size="10" letter-spacing="1">AETHER SEED: {seed}</text>
@@ -129,7 +147,7 @@ async def generate_perchance(req: GenerateRequest):
             # If rate limited (402) or other network block, trigger local generation
             if resp.status_code != 200:
                 print(f"Synthesis stream returned status {resp.status_code}. Activating local fallback...")
-                local_url, w, h = generate_local_glassmorphic_svg(req.prompt, req.shape, generated_seed)
+                local_url, w, h = generate_local_claymorphic_svg(req.prompt, req.shape, generated_seed)
                 return {
                     "status": "success",
                     "imageUrl": local_url,
@@ -159,7 +177,7 @@ async def generate_perchance(req: GenerateRequest):
     except Exception as e:
         print(f"Proxy generation error: {str(e)}. Activating local fallback...")
         # Local fallback on timeout or connection error
-        local_url, w, h = generate_local_glassmorphic_svg(req.prompt, req.shape, generated_seed)
+        local_url, w, h = generate_local_claymorphic_svg(req.prompt, req.shape, generated_seed)
         return {
             "status": "success",
             "imageUrl": local_url,

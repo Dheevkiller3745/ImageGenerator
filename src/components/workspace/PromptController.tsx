@@ -332,7 +332,7 @@ export const PromptController: React.FC<PromptControllerProps> = ({
       <div className="prompter-inner max-w-[850px] mx-auto flex flex-col gap-3">
         
         {/* Context Memory Chips */}
-        <div className="memory-context-bar glass-panel rounded-2xl p-4 flex flex-col gap-2.5 transition-all">
+        <div className="memory-context-bar clay-panel rounded-2xl p-4 flex flex-col gap-2.5 transition-all">
           <div className="memory-header flex justify-between items-center">
             <div className="memory-title flex items-center gap-2 text-[10px] font-bold text-[#8e909c] uppercase tracking-wider font-display">
               <BrainCircuit className="w-3.5 h-3.5 text-[#9e75ff]" />
@@ -384,7 +384,7 @@ export const PromptController: React.FC<PromptControllerProps> = ({
         </div>
  
         {/* Prompt Input Container */}
-        <div className="prompt-input-container glass-panel rounded-2xl p-4 flex flex-col gap-2 shadow-[0_12px_40px_rgba(0,0,0,0.5)] focus-within:border-[#7c4dff]/30 focus-within:shadow-[0_12px_40px_rgba(124,77,255,0.05)] transition-all">
+        <div className="prompt-input-container clay-panel rounded-2xl p-4 flex flex-col gap-2 shadow-[0_12px_40px_rgba(0,0,0,0.5)] focus-within:border-[#7c4dff]/30 focus-within:shadow-[0_12px_40px_rgba(124,77,255,0.05)] transition-all">
           <textarea 
             id="promptInput" 
             value={prompt}
@@ -399,7 +399,7 @@ export const PromptController: React.FC<PromptControllerProps> = ({
           <div className="prompt-actions flex justify-between items-center border-t border-white/[0.03] pt-3">
             <button 
               onClick={enhancePromptText}
-              className="prompt-action-btn glass-panel glass-panel-hover text-[#8e909c] text-xs font-semibold cursor-pointer flex items-center gap-1.5 py-1.5 px-3 rounded-xl hover:text-white border border-white/5 hover:border-white/15 transition-all"
+              className="prompt-action-btn clay-panel clay-panel-hover text-[#8e909c] text-xs font-semibold cursor-pointer flex items-center gap-1.5 py-1.5 px-3 rounded-xl hover:text-white border border-white/5 hover:border-white/15 transition-all"
             >
               <WandSparkles className="w-3.5 h-3.5 text-[#9e75ff]" /> Enhance
             </button>

@@ -107,7 +107,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
       <div className="w-full max-w-[440px] z-30 mt-16">
-        {/* Glassmorphic/Claymorphic Auth Box */}
+        {/* Claymorphic Auth Box */}
         <div className="clay-panel p-8 sm:p-10 relative overflow-hidden">
           
           {/* Header */}

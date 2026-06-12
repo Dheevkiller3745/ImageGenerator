@@ -27,7 +27,9 @@
     --status-error: #f44336;
 
     /* Styling Properties */
-    --glass-blur: blur(16px);
+    --clay-bg: #121216;
+    --clay-shadow-1: #1a1a20;
+    --clay-shadow-2: #050508;
     --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     --border-radius-sm: 6px;
     --border-radius-md: 10px;
@@ -510,8 +512,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .main-header {
     height: 70px;
     border-bottom: 1px solid var(--border-color);
-    background-color: rgba(9, 9, 12, 0.8);
-    backdrop-filter: var(--glass-blur);
+    background-color: var(--clay-bg);
+    box-shadow: inset 4px 4px 8px var(--clay-shadow-1),
+                inset -4px -4px 8px var(--clay-shadow-2);
     padding: 0 24px;
     display: flex;
     justify-content: space-between;
@@ -852,8 +855,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
 /* Editor Floating Toolbox */
 .canvas-editor-toolbox {
     width: 250px;
-    background-color: var(--bg-panel);
-    backdrop-filter: var(--glass-blur);
+    background-color: var(--clay-bg);
+    box-shadow: inset 6px 6px 12px var(--clay-shadow-1),
+                inset -6px -6px 12px var(--clay-shadow-2);
     border-left: 1px solid var(--border-color);
     padding: 24px;
     display: flex;
@@ -1330,8 +1334,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(0);
-    background-color: rgba(22, 22, 29, 0.85);
-    backdrop-filter: var(--glass-blur);
+    background-color: var(--clay-bg);
+    box-shadow: inset 4px 4px 8px var(--clay-shadow-1),
+                inset -4px -4px 8px var(--clay-shadow-2),
+                0 8px 32px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--border-color);
     padding: 12px 20px;
     border-radius: var(--border-radius-md);

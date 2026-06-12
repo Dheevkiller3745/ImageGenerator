@@ -305,7 +305,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
                   <button 
                     key={idx}
                     onClick={() => useWorkspaceStore.getState().setPrompt(s.prompt)}
-                    className="suggestion-card glass-panel glass-panel-hover rounded-2xl p-5 text-left cursor-pointer overflow-hidden relative min-h-[100px] flex items-end group"
+                    className="suggestion-card clay-panel clay-panel-hover rounded-2xl p-5 text-left cursor-pointer overflow-hidden relative min-h-[100px] flex items-end group"
                   >
                     <span className="font-semibold text-sm z-10 text-white drop-shadow-md">{s.title}</span>
                     <div className="card-bg absolute inset-0 opacity-20 transition-all duration-200 group-hover:scale-105 group-hover:opacity-35 bg-gradient-to-tr from-[#7c4dff]/20 to-[#ff4081]/20"></div>
@@ -358,7 +358,7 @@ export const CanvasViewport: React.FC<CanvasViewportProps> = ({
         )}
       </div>
 
-      {/* Floating glassmorphic editor toolbox (visible when image exists) */}
+      {/* Floating claymorphic editor toolbox (visible when image exists) */}
       {imageDataUrl && (
         <div className="canvas-editor-toolbox w-[250px] bg-[#0c0c10]/75 backdrop-blur-xl border-l border-white/5 p-6 flex flex-col gap-5 z-10 overflow-y-auto">
           <div className="toolbox-header">
