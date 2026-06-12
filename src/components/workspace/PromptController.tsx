@@ -29,6 +29,8 @@ export const PromptController: React.FC<PromptControllerProps> = ({
   const [prompt, setPrompt] = useState(store.activePrompt);
   const [rememberStyle, setRememberStyle] = useState(true);
   const [rememberElements, setRememberElements] = useState(false);
+  const [perchanceIframeUrl, setPerchanceIframeUrl] = useState<string | null>(null);
+  const [perchanceIframeId, setPerchanceIframeId] = useState<string | null>(null);
 
   // Sync component state with store prompt changes during render to satisfy purity checks
   const [prevActivePrompt, setPrevActivePrompt] = useState(store.activePrompt);
@@ -204,28 +206,53 @@ export const PromptController: React.FC<PromptControllerProps> = ({
         const blob = await res.blob();
         dataUrl = await convertBlobToDataURL(blob);
       } 
-      // 3. Perchance Backend Proxy
+      // 3. Perchance Client-Side Iframe Integration
       else if (activeEngine === 'perchance') {
-        const res = await fetch('/api/generate/perchance', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: finalPrompt,
-            negative_prompt: store.negativePrompt || "",
-            seed: generatedSeed,
-            shape: store.aspectRatio,
-            guidance_scale: store.guidanceScale,
-            session_key: null
-          })
+        const iframeId = 'perchance_iframe_' + Math.floor(Math.random() * 1000000);
+        setPerchanceIframeId(iframeId);
+        
+        const hashData = {
+          saveChannel: "text-to-image-plugin",
+          saveTitle: "",
+          saveDescription: "",
+          prompt: finalPrompt,
+          seed: generatedSeed,
+          resolution: dim.w === 768 && dim.h === 768 ? "768x768" : (dim.w === 512 ? "512x768" : "768x512"),
+          guidanceScale: store.guidanceScale,
+          defaultGuidanceScale: 7,
+          negativePrompt: store.negativePrompt || "",
+          requestId: "req_" + Math.floor(Math.random() * 1000000),
+          iframeId: iframeId,
+          referenceImage: null
+        };
+        
+        const encodedHash = encodeURIComponent(JSON.stringify(hashData));
+        const url = `https://image-generation.perchance.org/embed#${encodedHash}`;
+        
+        setPerchanceIframeUrl(url);
+        
+        const resultPromise = new Promise<{ dataUrl: string; seedUsed: number }>((resolve, reject) => {
+          const handler = (event: MessageEvent) => {
+            if (event.data && event.data.type === 'finished' && event.data.id === iframeId) {
+              window.removeEventListener('message', handler);
+              resolve({
+                dataUrl: event.data.dataUrl,
+                seedUsed: event.data.seedUsed
+              });
+            }
+          };
+          window.addEventListener('message', handler);
+          
+          setTimeout(() => {
+            window.removeEventListener('message', handler);
+            reject(new Error("Perchance image generation timed out (60s limit)."));
+          }, 60000);
         });
 
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.detail || "Perchance proxy request failed.");
-        }
-
-        const data = await res.json();
-        dataUrl = data.imageUrl;
+        const result = await resultPromise;
+        dataUrl = result.dataUrl;
+        setPerchanceIframeUrl(null);
+        setPerchanceIframeId(null);
       }
       // 4. OpenAI DALL-E 3 Real API Route
       else if (activeEngine === 'openai') {
@@ -273,6 +300,8 @@ export const PromptController: React.FC<PromptControllerProps> = ({
       
       // Fallback Logic: If Perchance fails, fall back instantly to Puter.js
       if (activeEngine === 'perchance') {
+        setPerchanceIframeUrl(null);
+        setPerchanceIframeId(null);
         showToast("Perchance generation failed. Falling back to Puter AI...", "error");
         setTimeout(() => {
           generateImage('puter');
@@ -384,8 +413,52 @@ export const PromptController: React.FC<PromptControllerProps> = ({
             </button>
           </div>
         </div>
-
       </div>
+      {perchanceIframeUrl && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md transition-all duration-300">
+          <div className="clay-panel max-w-[420px] w-full p-6 mx-4 relative overflow-hidden flex flex-col items-center gap-5 border border-white/10 shadow-[0_24px_50px_rgba(0,0,0,0.8)]">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[radial-gradient(circle,var(--primary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+            
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#9e75ff] shadow-inner animate-pulse">
+              <BrainCircuit className="w-6 h-6" />
+            </div>
+            
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-white font-display">AetherImage Synthesis</h3>
+              <p className="text-xs text-zinc-400 mt-1.5 px-4 leading-relaxed">
+                Establishing secure connection to Perchance. Please verify you are human if prompted.
+              </p>
+            </div>
+
+            <div className="w-[304px] h-[130px] rounded-xl overflow-hidden border border-white/5 bg-black/40 flex items-center justify-center relative">
+              <iframe 
+                src={perchanceIframeUrl} 
+                className="w-[300px] h-[120px] border-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 w-full items-center">
+              <div className="flex items-center gap-2 text-[10px] text-zinc-500 uppercase tracking-widest font-bold font-sans">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7c4dff] animate-ping" />
+                <span>Synthesizing Pixel Map</span>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => {
+                setPerchanceIframeUrl(null);
+                setPerchanceIframeId(null);
+                setIsGenerating(false);
+                showToast("Generation cancelled", "info");
+              }}
+              className="text-xs text-zinc-400 hover:text-white px-4 py-2 border border-white/5 hover:border-white/15 bg-white/[0.01] hover:bg-white/5 rounded-xl transition-all cursor-pointer mt-1"
+            >
+              Cancel Generation
+            </button>
+          </div>
+        </div>
+      )}
     </footer>
   );
 };

@@ -82,7 +82,8 @@ export async function POST(req: Request) {
     };
     const { w, h } = resolutionMap[shape] || { w: 768, h: 768 };
 
-    // Build Pollinations API endpoint URL
+    // Backend fallback: uses Pollinations.ai since Perchance requires client-side Cloudflare Turnstile token verification.
+    // The main frontend client now uses the direct iframe verification wrapper to bypass Turnstile.
     const encodedPrompt = encodeURIComponent(prompt);
     let targetUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${w}&height=${h}&seed=${generatedSeed}&nologo=true`;
     if (negative_prompt) {
