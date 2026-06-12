@@ -4,6 +4,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
+export const isSupabaseConfigured = 
+  supabaseUrl !== 'https://placeholder-url.supabase.co' && 
+  supabaseUrl !== '' &&
+  supabaseAnonKey !== 'placeholder-anon-key' &&
+  supabaseAnonKey !== '';
+
 // 1. Browser Client
 export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
@@ -19,3 +25,4 @@ export const supabaseAdmin = typeof window !== 'undefined'
         autoRefreshToken: false,
       },
     });
+

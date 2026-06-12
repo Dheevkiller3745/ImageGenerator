@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Sparkles, Mail, Lock, User, Chrome, ArrowRight, ShieldCheck } from 'lucide-react';
-import { supabase } from '@/utils/supabaseClient';
+import { supabase, isSupabaseConfigured } from '@/utils/supabaseClient';
 import { Navbar } from '@/components/Navbar';
 
 export default function LoginPage() {
@@ -20,6 +20,59 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Render configuration error if keys are not set
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="relative min-h-screen bg-background text-foreground flex items-center justify-center p-4 font-sans overflow-hidden">
+        {/* Subtle SaaS grid background */}
+        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+        <div className="w-full max-w-[500px] z-30">
+          <div className="clay-panel p-8 sm:p-10 relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[radial-gradient(circle,var(--secondary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+
+            <div className="text-center flex flex-col items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-amber-500 animate-pulse" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold font-display tracking-tight text-white">
+                  Configuration Required
+                </h2>
+                <p className="text-[11px] text-amber-400 uppercase tracking-widest mt-1">Supabase Keys Missing</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 text-xs text-zinc-300 leading-relaxed bg-[#121216]/60 border border-white/5 rounded-2xl p-5 mb-6">
+              <p>
+                STATICs requires active connection credentials to persist your generated canvas sessions and user profiles.
+              </p>
+              <p className="font-semibold text-white">
+                Please add these Environment Variables to your local `.env` file or your Vercel Dashboard Settings:
+              </p>
+              <ul className="list-disc pl-4 flex flex-col gap-2 font-mono text-[11px] text-[#9e75ff]">
+                <li><span className="text-white font-semibold">NEXT_PUBLIC_SUPABASE_URL</span> = Your Supabase Project URL</li>
+                <li><span className="text-white font-semibold">NEXT_PUBLIC_SUPABASE_ANON_KEY</span> = Your Anon / Public Key</li>
+                <li><span className="text-white font-semibold">SUPABASE_SERVICE_ROLE_KEY</span> = Your Service Role Secret</li>
+              </ul>
+              <p className="text-[10px] text-zinc-500 border-t border-white/5 pt-3">
+                Refer to <code className="text-white font-mono bg-white/5 px-1 py-0.5 rounded">WALKTHROUGH_SETUP.md</code> in the repository root for detailed table schemas and trigger scripts.
+              </p>
+            </div>
+
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-gradient-to-r from-[#7c4dff] to-[#ff4081] border-none text-white text-xs font-bold py-3.5 rounded-xl cursor-pointer flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(124,77,255,0.25)] active:scale-[0.98] transition-all"
+            >
+              <span>Verify & Re-check Configuration</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Auto-redirect if user has an active session
   React.useEffect(() => {

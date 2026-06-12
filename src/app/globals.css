@@ -176,22 +176,83 @@ body {
   --background: #000000 !important;
   --foreground: #ffffff !important;
   --panel-bg: rgba(0, 0, 0, 0.98) !important;
-  --panel-border: rgba(255, 255, 255, 0.4) !important;
+  --panel-border: rgba(255, 255, 255, 0.5) !important;
   --clay-bg: #000000 !important;
   --clay-shadow-1: rgba(255, 255, 255, 0.2) !important;
   --clay-shadow-2: rgba(0, 0, 0, 0.95) !important;
 }
 
+.high-contrast * {
+  text-shadow: none !important;
+}
+
+/* Ensure all text nodes are high contrast white in dark theme */
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6,
+.high-contrast p,
+.high-contrast span,
+.high-contrast label,
+.high-contrast a,
+.high-contrast text {
+  color: #ffffff !important;
+}
+
 .high-contrast input, 
 .high-contrast textarea, 
 .high-contrast select {
-  border-color: rgba(255, 255, 255, 0.6) !important;
+  border: 2px solid #ffffff !important;
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
 .high-contrast button {
-  border-color: rgba(255, 255, 255, 0.8) !important;
+  border: 2px solid #ffffff !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Light Theme High Contrast Override */
+[data-theme='light'].high-contrast {
+  --background: #ffffff !important;
+  --foreground: #000000 !important;
+  --panel-bg: rgba(255, 255, 255, 0.98) !important;
+  --panel-border: rgba(0, 0, 0, 0.6) !important;
+  --clay-bg: #ffffff !important;
+  --clay-shadow-1: rgba(0, 0, 0, 0.1) !important;
+  --clay-shadow-2: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Ensure all text nodes are high contrast black in light theme */
+[data-theme='light'].high-contrast h1,
+[data-theme='light'].high-contrast h2,
+[data-theme='light'].high-contrast h3,
+[data-theme='light'].high-contrast h4,
+[data-theme='light'].high-contrast h5,
+[data-theme='light'].high-contrast h6,
+[data-theme='light'].high-contrast p,
+[data-theme='light'].high-contrast span,
+[data-theme='light'].high-contrast label,
+[data-theme='light'].high-contrast a,
+[data-theme='light'].high-contrast text {
+  color: #000000 !important;
+}
+
+[data-theme='light'].high-contrast input, 
+[data-theme='light'].high-contrast textarea, 
+[data-theme='light'].high-contrast select {
+  border: 2px solid #000000 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme='light'].high-contrast button {
+  border: 2px solid #000000 !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }
 
 /* Font Size Scales */

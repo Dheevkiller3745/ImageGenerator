@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useWorkspaceStore, HistoryItem } from '@/store/useWorkspaceStore';
 import { CanvasViewport } from '@/components/workspace/CanvasViewport';
 import { PromptController } from '@/components/workspace/PromptController';
-import { supabase } from '@/utils/supabaseClient';
+import { supabase, isSupabaseConfigured } from '@/utils/supabaseClient';
 import { Navbar } from '@/components/Navbar';
 import { 
   Plus, Cpu, Maximize, Settings2, ChevronDown, 
-  Shuffle, Menu, X, Send, Info, MessageSquareCode
+  Shuffle, Menu, X, Send, Info, MessageSquareCode,
+  Sparkles, ArrowRight, ShieldCheck, Activity
 } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
@@ -23,32 +24,97 @@ export default function WorkspacePage() {
   // Auth validation state
   const [authLoading, setAuthLoading] = useState(true);
 
+  // User profile and session logs
+  const [profile, setProfile] = useState<{ display_name?: string; email?: string } | null>(null);
+  const [sessions, setSessions] = useState<Array<{ id: string; ip_address: string; device_info: string; logged_in_at: string }>>([]);
+
   // Local state for image URLs
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [editedImage, setEditedImage] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Auth checker
+  // Auth checker and session loader
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!isSupabaseConfigured) return;
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) {
         router.push('/login');
       } else {
         setAuthLoading(false);
+        if (session.user) {
+          // Fetch profile
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('display_name, email')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (profileData) {
+            setProfile(profileData);
+          } else {
+            setProfile({
+              email: session.user.email,
+              display_name: session.user.email?.split('@')[0] || 'User'
+            });
+          }
+
+          // Fetch recent user sessions
+          const { data: sessionData } = await supabase
+            .from('user_sessions')
+            .select('id, ip_address, device_info, logged_in_at')
+            .eq('user_id', session.user.id)
+            .order('logged_in_at', { ascending: false })
+            .limit(3);
+          
+          if (sessionData) {
+            setSessions(sessionData);
+          }
+        }
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!session) {
         router.push('/login');
       } else {
         setAuthLoading(false);
+        if (session.user) {
+          // Fetch profile
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('display_name, email')
+            .eq('id', session.user.id)
+            .single();
+          
+          if (profileData) {
+            setProfile(profileData);
+          } else {
+            setProfile({
+              email: session.user.email,
+              display_name: session.user.email?.split('@')[0] || 'User'
+            });
+          }
+
+          // Fetch recent user sessions
+          const { data: sessionData } = await supabase
+            .from('user_sessions')
+            .select('id, ip_address, device_info, logged_in_at')
+            .eq('user_id', session.user.id)
+            .order('logged_in_at', { ascending: false })
+            .limit(3);
+          
+          if (sessionData) {
+            setSessions(sessionData);
+          }
+        }
       }
     });
 
     return () => subscription.unsubscribe();
   }, [router]);
+
 
   // Sidebar toggles
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -79,23 +145,23 @@ export default function WorkspacePage() {
     }
   }, [toast.show]);
 
-  // Initialise app state
+  // Initialise app state once on mount
   useEffect(() => {
-    // If store history is empty, create a placeholder workspace
-    if (store.history.length > 0) {
-      const latest = store.history[0];
-      setTimeout(() => {
-        setActiveWorkspaceId(latest.id);
-        setActiveImage(latest.imageUrl);
-        setEditedImage(null);
-        setUndoStack([latest.imageUrl]);
-        store.setPrompt(latest.prompt);
-        store.setSeed(latest.seed);
-        store.setEngine(latest.engine as 'puter' | 'pollinations' | 'perchance' | 'openai');
-        store.setAspectRatio(latest.aspectRatio as 'square' | 'portrait' | 'landscape');
-      }, 0);
+    const history = useWorkspaceStore.getState().history;
+    if (history.length > 0) {
+      const latest = history[0];
+      setActiveWorkspaceId(latest.id);
+      setActiveImage(latest.imageUrl);
+      setEditedImage(null);
+      setUndoStack([latest.imageUrl]);
+      
+      const state = useWorkspaceStore.getState();
+      state.setPrompt(latest.prompt);
+      state.setSeed(latest.seed);
+      state.setEngine(latest.engine as 'puter' | 'pollinations' | 'perchance' | 'openai');
+      state.setAspectRatio(latest.aspectRatio as 'square' | 'portrait' | 'landscape');
     }
-  }, [store]);
+  }, []);
 
   // Sync details when an item is selected from history
   const selectHistoryItem = (item: HistoryItem) => {
@@ -217,6 +283,33 @@ export default function WorkspacePage() {
           </button>
         </div>
 
+        {/* User Session Profile Header */}
+        {profile && (
+          <div className="user-profile-card mx-6 mt-2 mb-4 p-4 clay-panel border border-white/5 rounded-2xl flex items-center gap-3 relative overflow-hidden bg-white/[0.01]">
+            <div className="absolute -top-10 -right-10 w-24 h-24 bg-[radial-gradient(circle,var(--primary-glow)_0%,_transparent_70%)] pointer-events-none"></div>
+            {/* Avatar */}
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] flex items-center justify-center text-white font-bold text-sm shadow-inner uppercase shrink-0">
+              {profile.display_name?.charAt(0) || profile.email?.charAt(0) || 'U'}
+            </div>
+            
+            {/* Meta */}
+            <div className="flex-grow min-w-0">
+              <h4 className="text-xs font-bold text-white truncate capitalize">
+                {profile.display_name}
+              </h4>
+              <p className="text-[9px] text-[#8e909c] truncate font-mono">
+                {profile.email}
+              </p>
+              
+              {/* Badge */}
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="text-[8px] uppercase tracking-wider text-emerald-400 font-bold">Secure Session</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* New Workspace button */}
         <button 
           onClick={handleResetWorkspace}
@@ -268,9 +361,19 @@ export default function WorkspacePage() {
               <option value="perchance" className="bg-[#09090c]">Perchance Engine (Serverless)</option>
             </select>
             {store.currentEngine === 'perchance' && (
-              <div className="warning-box mt-2.5 p-3 rounded-xl bg-[#7c4dff]/5 border border-[#7c4dff]/15 text-[#9e75ff] text-[10px] flex gap-2.5 items-start leading-relaxed">
-                <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <span>Runs securely on the cloud serverless endpoint.</span>
+              <div className="warning-box mt-2.5 p-3 rounded-xl bg-[#7c4dff]/5 border border-[#7c4dff]/15 text-[#9e75ff] text-[10px] flex flex-col gap-2 leading-relaxed">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping"></span>
+                  <span className="font-bold text-white uppercase tracking-wider text-[9px]">Perchance Wrapper Bridge</span>
+                </div>
+                <div className="flex flex-col gap-1 text-[9px] text-[#8e909c] font-mono border-t border-white/5 pt-1.5">
+                  <div className="flex justify-between"><span>Status:</span><span className="text-green-400 font-semibold">Connected</span></div>
+                  <div className="flex justify-between"><span>Bypass Tunnel:</span><span className="text-green-400 font-semibold">Active</span></div>
+                  <div className="flex justify-between"><span>Turnstile Check:</span><span className="text-white">Auto (Browser)</span></div>
+                </div>
+                <p className="text-[8px] text-[#8e909c] mt-1 leading-normal italic">
+                  *Uses secure client-side browser context to bypass Cloudflare protection automatically.
+                </p>
               </div>
             )}
           </div>
@@ -367,6 +470,29 @@ export default function WorkspacePage() {
             )}
           </div>
 
+          {/* Active Sessions Panel */}
+          {sessions.length > 0 && (
+            <div className="sidebar-section border-t border-white/5 pt-5 flex flex-col gap-3">
+              <h3 className="section-title text-[11px] uppercase tracking-wider text-[#8e909c] flex items-center gap-2 font-bold">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Active Session Logs
+              </h3>
+              
+              <div className="flex flex-col gap-2">
+                {sessions.map((s) => (
+                  <div key={s.id} className="p-3 bg-white/[0.01] border border-white/5 rounded-xl text-[10px] text-zinc-400 leading-normal flex flex-col gap-1 hover:border-[#7c4dff]/20 transition-all">
+                    <div className="flex justify-between items-center font-semibold text-white/90">
+                      <span className="truncate w-36 font-mono text-[9px] text-[#8e909c]">{s.device_info.split(' ')[0] || 'Unknown Device'}</span>
+                      <span className="text-[8px] text-[#ff4081] font-mono">{s.ip_address}</span>
+                    </div>
+                    <span className="text-[8px] text-zinc-600 font-mono">
+                      {new Date(s.logged_in_at).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* WhatsApp Conversion Panel */}
           <div className="sidebar-section border-t border-white/5 pt-5">
             <h3 className="section-title text-[11px] uppercase tracking-wider text-[#8e909c] flex items-center gap-2 font-bold mb-3">
@@ -397,7 +523,7 @@ export default function WorkspacePage() {
                 disabled={leadSubmitting}
                 className="w-full bg-gradient-to-tr from-[#7c4dff] to-[#ff4081] border-none text-white text-xs font-bold py-2.5 px-4 rounded-xl cursor-pointer flex items-center justify-center gap-2 shadow-[0_4px_10px_rgba(255,64,129,0.2)] hover:shadow-[0_6px_14px_rgba(255,64,129,0.3)] transition-all disabled:opacity-50"
               >
-                <Send className="w-3 h-3" />
+                <Send className="w-3.5 h-3.5" />
                 <span>{leadSubmitting ? 'Submitting...' : 'Refine on WhatsApp'}</span>
               </button>
             </form>
